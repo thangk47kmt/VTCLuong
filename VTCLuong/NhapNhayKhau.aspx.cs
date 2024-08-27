@@ -128,7 +128,7 @@ namespace TNGLuong
 
         protected void btnSaveNhayKhau_Click(object sender, EventArgs e)
         {
-            lblMessenger.Text = "Bạn có muốn lưu dữ liệu nhảy khâu từ mã hàng <b><font color=\"red\"> \"" + ddlMaHang.SelectedItem.Text.ToUpper() + "\"</font></b> của <b><font color=\"red\">\"" + ddlToMay.SelectedItem.Text.ToUpper() + "\"</font></b> ko?";
+            lblMessenger.Text = "Bạn có muốn lưu dữ liệu nhảy khâu ngày <b><font color=\"red\"> \"" + txtDate.Text.ToUpper() + "\"</font></b>  ko?";
             addthismodalContact.Style["display"] = "block";
         }
 
@@ -386,6 +386,7 @@ namespace TNGLuong
         {
             loadDataToMay();
             loadDataMaHang();
+            loadDataGrid();
             DataTable dt = this.loadDataGridNhayKhau();
             if (dt != null && dt.Rows.Count > 0)
             {
@@ -484,9 +485,9 @@ namespace TNGLuong
 
                 DataRow newRow = dtGrd.NewRow();
                 newRow["STT"] = dtGrd.Rows.Count + 1;
-                newRow["PhongBanID"] = int.Parse(ddlToMay.SelectedValue.ToString()); // Tăng ID lên 1
-                newRow["TenPhongBan"] = ddlToMay.SelectedItem;   // Giá trị mẫu
-                newRow["TuGio"] = DateTime.Now.ToShortTimeString();              // Giá trị mẫu
+                newRow["PhongBanID"] = int.Parse(ddlToMay.SelectedValue.ToString());
+                newRow["TenPhongBan"] = ddlToMay.SelectedItem;
+                newRow["TuGio"] = DateTime.Now.ToShortTimeString();
 
                 // Thêm dòng mới vào DataTable
                 dtGrd.Rows.Add(newRow);
@@ -804,6 +805,73 @@ namespace TNGLuong
 
                         return;
                     }
+                    //Save thoi gian nhay khau
+                    if(gridNhapThoiGian.Rows.Count > 0)
+                    {
+
+                        try
+                        {
+                            int mansid = 0;
+
+                            if (Session["userid"] != null)
+                                mansid = Convert.ToInt32(Session["userid"].ToString());
+                            DateTime dte = DateTime.Parse(txtDate.Text);
+
+
+                            SqlParameter pr1 = new SqlParameter();
+                            pr1.ParameterName = "@daNgay";
+                            pr1.Value = dte.ToString("MM/dd/yyyy");
+                            SqlParameter pr2 = new SqlParameter();
+                            pr2.ParameterName = "@iMaNS_ID";
+                            pr2.Value = mansid;
+
+                            string sqlXoa_ThoiGian = "[dbo].[LCB_ThoiGian_NhayKhau_Delete_wMaNS_ID_and_Ngay] @daNgay, @iMaNS_ID";
+                            db.Database.ExecuteSqlCommand(sqlXoa_ThoiGian, pr1, pr2);
+                            //LCB_ThoiGian_NhayKhau_Delete_wMaNS_ID_and_Ngay
+                            foreach (GridViewRow row in gridNhapThoiGian.Rows)
+                            {
+                                if (row.RowType == DataControlRowType.DataRow)
+                                {
+                                    TextBox start = (TextBox)row.FindControl("txtStartDate");
+                                    TextBox end = (TextBox)row.FindControl("txtEndDate");
+                                    TextBox ghichu = (TextBox)row.FindControl("txtGhiChu");
+                                    TextBox PhongBanID = (TextBox)row.FindControl("txtPhongBanID");
+                                    if (!string.IsNullOrEmpty(start.Text) && !string.IsNullOrEmpty(end.Text))
+                                    {
+                                        if (TimeSpan.Parse(start.Text) >= TimeSpan.Parse(end.Text)) continue;
+
+                                        SqlParameter pr1x = new SqlParameter();
+                                        pr1x.ParameterName = "@daNgay";
+                                        pr1x.Value = dte.ToString("MM/dd/yyyy");
+                                        SqlParameter pr2x = new SqlParameter();
+                                        pr2x.ParameterName = "@iMaNS_ID";
+                                        pr2x.Value = mansid;
+                                        SqlParameter pr3 = new SqlParameter();
+                                        pr3.ParameterName = "@iPhongBanID";
+                                        var x = PhongBanID.Text;
+                                        pr3.Value = Convert.ToInt32(PhongBanID.Text);
+                                        SqlParameter pr4 = new SqlParameter();
+                                        pr4.ParameterName = "@tTuGio";
+                                        pr4.Value = DateTime.Parse(start.Text);
+                                        SqlParameter pr5 = new SqlParameter();
+                                        pr5.ParameterName = "@tDenGio";
+                                        pr5.Value = DateTime.Parse(end.Text);
+                                        SqlParameter pr6 = new SqlParameter();
+                                        pr6.ParameterName = "@sGhiChu";
+                                        pr6.Value = ghichu.Text;
+
+                                        string sqlQR_ThoiGian = "[dbo].[LCB_ThoiGian_NhayKhau_Insert_Or_Update] @daNgay, @iMaNS_ID, @iPhongBanID, @tTuGio, @tDenGio, @sGhiChu";
+                                        db.Database.ExecuteSqlCommand(sqlQR_ThoiGian, pr1x, pr2x, pr3, pr4, pr5, pr6);
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex) { }
+
+                    }
+                    //Save_ThoiGian(DateTime.Parse(txtDate.Text), Convert.ToInt32(Session["userid"].ToString()));
+
+
                     if (gridNangSuatNhayKhau.Rows.Count > 0)
                     {
                         int Phongbanid_ns = 0;
@@ -856,51 +924,7 @@ namespace TNGLuong
                         }
                         if (dtNhayKhau != null && dtNhayKhau.Rows.Count > 0)
                         {
-                            SqlParameter pr1 = new SqlParameter();
-                            pr1.ParameterName = "@daNgay";
-                            pr1.Value = dte.ToString("MM/dd/yyyy");
-                            SqlParameter pr2 = new SqlParameter();
-                            pr2.ParameterName = "@iMaNS_ID";
-                            pr2.Value = mansid;
-
-                            string sqlXoa_ThoiGian = "[dbo].[LCB_ThoiGian_NhayKhau_Delete_wMaNS_ID_and_Ngay] @daNgay, @iMaNS_ID";
-                            db.Database.ExecuteSqlCommand(sqlXoa_ThoiGian, pr1, pr2);
-                            //LCB_ThoiGian_NhayKhau_Delete_wMaNS_ID_and_Ngay
-                            foreach (GridViewRow row in gridNhapThoiGian.Rows)
-                            {
-                                if (row.RowType == DataControlRowType.DataRow)
-                                {
-                                    TextBox start = (TextBox)row.FindControl("txtStartDate");
-                                    TextBox end = (TextBox)row.FindControl("txtEndDate");
-                                    TextBox ghichu = (TextBox)row.FindControl("txtGhiChu");
-                                    if (!string.IsNullOrEmpty(start.Text) && !string.IsNullOrEmpty(end.Text))
-                                    {
-                                        if (TimeSpan.Parse(start.Text) >= TimeSpan.Parse(end.Text)) continue;
-
-                                        SqlParameter pr1x = new SqlParameter();
-                                        pr1x.ParameterName = "@daNgay";
-                                        pr1x.Value = dte.ToString("MM/dd/yyyy");
-                                        SqlParameter pr2x = new SqlParameter();
-                                        pr2x.ParameterName = "@iMaNS_ID";
-                                        pr2x.Value = mansid;
-                                        SqlParameter pr3 = new SqlParameter();
-                                        pr3.ParameterName = "@iPhongBanID";
-                                        pr3.Value = phongid;
-                                        SqlParameter pr4 = new SqlParameter();
-                                        pr4.ParameterName = "@tTuGio";
-                                        pr4.Value = DateTime.Parse(start.Text);
-                                        SqlParameter pr5 = new SqlParameter();
-                                        pr5.ParameterName = "@tDenGio";
-                                        pr5.Value = DateTime.Parse(end.Text);
-                                        SqlParameter pr6 = new SqlParameter();
-                                        pr6.ParameterName = "@sGhiChu";
-                                        pr6.Value = ghichu.Text;
-
-                                        string sqlQR_ThoiGian = "[dbo].[LCB_ThoiGian_NhayKhau_Insert_Or_Update] @daNgay, @iMaNS_ID, @iPhongBanID, @tTuGio, @tDenGio, @sGhiChu";
-                                        db.Database.ExecuteSqlCommand(sqlQR_ThoiGian, pr1x, pr2x, pr3, pr4, pr5, pr6);
-                                    }
-                                }
-                            }
+                            
 
                             var parameter = new SqlParameter("@dtSoLuong", SqlDbType.Structured);
                             parameter.Value = dtNhayKhau;
@@ -931,6 +955,12 @@ namespace TNGLuong
                 divBTN.Visible = true;
             }
             catch (Exception ex) { }
+        }
+
+        protected void Save_ThoiGian(DateTime dte, int mansid)
+        {
+            
+            
         }
 
         protected bool check_LichSuTruyCap_MaNS()
@@ -1069,6 +1099,14 @@ namespace TNGLuong
                     mansid = Convert.ToInt32(Session["userid"].ToString());
 
                 DateTime dte = DateTime.Parse(txtDate.Text);
+
+                SqlParameter pr1x = new SqlParameter();
+                pr1x.ParameterName = "@MaNS_ID";
+                pr1x.Value = mansid;
+                SqlParameter pr2x = new SqlParameter();
+                pr2x.ParameterName = "@Ngay";
+                pr2x.Value = dte.Date;
+
                 object[] sqlPr =
                 {
                     new SqlParameter("@MaNS_ID", mansid),
@@ -1076,7 +1114,7 @@ namespace TNGLuong
                 };
                 string sqlQuery = "[dbo].[LCB_ThoiGian_NhayKhau_Select_DaNhap] @MaNS_ID,@Ngay";
                 List<LCB_ThoiGian_NhayKhau> lst = new List<LCB_ThoiGian_NhayKhau>();
-               // DataTable dtCheck = db.Database.SqlQuery<LCB_ThoiGian_NhayKhau>(sqlQuery, sqlPr);
+                // DataTable dtCheck = db.Database.SqlQuery<LCB_ThoiGian_NhayKhau>(sqlQuery, sqlPr);
 
                 lst = db.Database.SqlQuery<LCB_ThoiGian_NhayKhau>(sqlQuery, sqlPr).ToList();
                 dtTG = ultils.CreateDataTable<LCB_ThoiGian_NhayKhau>(lst);
@@ -1110,13 +1148,6 @@ namespace TNGLuong
                 else
                 {
                     DataTable dt = ultils.CreateDataTable<LCB_ThoiGian_NhayKhau>(lst);
-                    //dt.Rows.Add(dt.NewRow());
-                    //gridNhapThoiGian.DataSource = dt;
-                    //gridNhapThoiGian.DataBind();
-                    //gridNhapThoiGian.Rows[gridNhapThoiGian.Rows.Count].Cells.Add(new TableCell());
-                    //gridNhapThoiGian.Rows[gridNhapThoiGian.Rows.Count].Cells[1].Text= ddlToMay.SelectedValue.ToString();
-                    //gridNhapThoiGian.Rows[gridNhapThoiGian.Rows.Count].Cells[2].Text = ddlToMay.Text;
-                    //DataTable dt = ViewState["gridNhapThoiGian"] as DataTable;
                     DataRow newRow = dt.NewRow();
                     newRow["STT"] = dt.Rows.Count + 1;
                     newRow["PhongBanID"] = int.Parse(ddlToMay.SelectedValue.ToString()); // Tăng ID lên 1

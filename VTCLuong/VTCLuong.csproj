@@ -214,6 +214,7 @@
     </Content>
     <Content Include="BangLuongThang.aspx" />
     <Content Include="BangTinhLuongCN.aspx" />
+    <Content Include="CanBangChuyen_Comment.aspx" />
     <Content Include="CongDiLamCongNhan.aspx" />
     <Content Include="css\main.css" />
     <Content Include="css\style-theme.scss.css" />
@@ -897,6 +898,13 @@
     </Compile>
     <Compile Include="BangLuongThang.aspx.designer.cs">
       <DependentUpon>BangLuongThang.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CanBangChuyen_Comment.aspx.cs">
+      <DependentUpon>CanBangChuyen_Comment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CanBangChuyen_Comment.aspx.designer.cs">
+      <DependentUpon>CanBangChuyen_Comment.aspx</DependentUpon>
     </Compile>
     <Compile Include="Cls_DangKyAnCa\clsDangKy_AnCa.cs" />
     <Compile Include="Cls_DangKyAnCa\dbNSTLContent.cs" />

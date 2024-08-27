@@ -41,9 +41,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2" align="left" style="padding-left:10px;">
-                   
-                </td>
+                <td colspan="2" align="left" style="padding-left: 10px;"></td>
             </tr>
             <tr>
                 <td colspan="2" style="margin-top: 10px; font-size: 9pt; font-weight: bold; color: red; width: 100%;">
@@ -74,10 +72,10 @@
                                     <asp:CheckBox ID="chkIsBTP" runat="server" Checked='<%#Eval("IsBTP") %>' />
                                 </ItemTemplate>
                             </asp:TemplateField>
-                             
+
                             <asp:TemplateField HeaderText="TT">
                                 <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="40px" />
-                                <ItemStyle HorizontalAlign="Center" Width="20%" ></ItemStyle>
+                                <ItemStyle HorizontalAlign="Center" Width="20%"></ItemStyle>
                                 <ItemTemplate>
                                     <asp:Label ID="lblSTT_String" runat="server" Text='<%#Eval("STT_String") %>' Width="100%"></asp:Label>
                                 </ItemTemplate>
@@ -91,7 +89,7 @@
                                 </ItemTemplate>
                             </asp:TemplateField>
 
-                             <asp:TemplateField HeaderText="Mã hàng" SortExpression="MaHang" Visible="false">
+                            <asp:TemplateField HeaderText="Mã hàng" SortExpression="MaHang" Visible="false">
                                 <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                                 <ItemTemplate>
                                     <asp:Label ID="lblMaHang" runat="server" Text='<%#Eval("MaHang") %>' Width="100%"></asp:Label>
@@ -108,20 +106,20 @@
                             <asp:TemplateField HeaderText="Công đoạn" SortExpression="TenCongDoan">
                                 <HeaderStyle HorizontalAlign="Center" />
                                 <HeaderTemplate>
-                                    <div style="width:50%;text-align:center;display:inline;margin-top: 3px;">
-                                        <asp:Label ID="lblConDoan" runat="server" Text="Công đoạn" Width="50%" Font-Bold="True" ForeColor="White" style="margin-top: 3px;"></asp:Label>
+                                    <div style="width: 50%; text-align: center; display: inline; margin-top: 3px;">
+                                        <asp:Label ID="lblConDoan" runat="server" Text="Công đoạn" Width="50%" Font-Bold="True" ForeColor="White" Style="margin-top: 3px;"></asp:Label>
                                     </div>
-                                    <div style="float:right;width:20%;display:inline;">
-                                        <asp:LinkButton ID="lbtnChiTiet" runat="server" width="20%" Font-Bold="True" ForeColor="White" style="float: right;margin-right: 15px;" ToolTip="Chi tiết" OnClick="lbtnChiTiet_Click"><i class="fa fa-forward"></i></asp:LinkButton>
-                                        <asp:LinkButton ID="lbtnAnChiTiet" runat="server" width="20%" Font-Bold="True" ForeColor="White" style="float: right;margin-right: 15px;" ToolTip="Ẩn chi tiết" OnClick="lbtnAnChiTiet_Click" Visible="false"><i class="fa fa-backward"></i></asp:LinkButton>
+                                    <div style="float: right; width: 20%; display: inline;">
+                                        <asp:LinkButton ID="lbtnChiTiet" runat="server" Width="20%" Font-Bold="True" ForeColor="White" Style="float: right; margin-right: 15px;" ToolTip="Chi tiết" OnClick="lbtnChiTiet_Click"><i class="fa fa-forward"></i></asp:LinkButton>
+                                        <asp:LinkButton ID="lbtnAnChiTiet" runat="server" Width="20%" Font-Bold="True" ForeColor="White" Style="float: right; margin-right: 15px;" ToolTip="Ẩn chi tiết" OnClick="lbtnAnChiTiet_Click" Visible="false"><i class="fa fa-backward"></i></asp:LinkButton>
                                     </div>
-                                </HeaderTemplate>                                
+                                </HeaderTemplate>
                                 <ItemTemplate>
                                     <asp:Label ID="lblTenCongDoanToMay" runat="server" Text='<%#Eval("TenCongDoan") %>' Width="100%"></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
 
-<%--                            <asp:TemplateField HeaderText="TGCN" Visible="false" SortExpression="TGCN">
+                            <%--                            <asp:TemplateField HeaderText="TGCN" Visible="false" SortExpression="TGCN">
                                 <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                                 <ItemStyle ></ItemStyle>
                                 <ItemTemplate>
@@ -150,7 +148,7 @@
                                 </ItemTemplate>
                             </asp:TemplateField>
 
-<%--                            <asp:TemplateField HeaderText="Giá" Visible="false" SortExpression="DonGia">
+                            <%--                            <asp:TemplateField HeaderText="Giá" Visible="false" SortExpression="DonGia">
                                 <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                                 <ItemStyle ></ItemStyle>
                                 <ItemTemplate>
@@ -166,7 +164,7 @@
                             </asp:TemplateField>
 
                             <asp:TemplateField HeaderText="NS" SortExpression="ThucHien_NhanVien">
-                                <HeaderStyle  HorizontalAlign="Center" VerticalAlign="Middle" Width="50px"  />
+                                <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="50px" />
                                 <ItemTemplate>
                                     <asp:Label ID="lblThucHienGoc" runat="server" Text='<%#Eval("ThucHien_NhanVien") %>' Width="100%" Visible="false"></asp:Label>
                                     <asp:TextBox ID="txtThucHien_NhanVienToMay" runat="server" Text='<%#Eval("ThucHien_NhanVien") %>' Width="100%"></asp:TextBox>
@@ -205,10 +203,10 @@
                     <div class="topnav">
                         <div class="search-container">
                             <input type="text" class="textbox" placeholder="Tìm công đoạn.." name="search" id="txtsearch" runat="server">
-                            <asp:Label ID="Label4" runat="server" style="margin-right: 5px;" Text="Số giờ :"></asp:Label>
-                            <asp:Label ID="lblSoGio" runat="server" style="margin-right: 5px;" Text=""></asp:Label>
-                            <asp:Label ID="Label5" runat="server" style="margin-right: 5px;" Text="   phút :"></asp:Label>
-                            <asp:Label ID="lblSoPhut" runat="server" style="margin-right: 5px;" Text=""></asp:Label>
+                            <asp:Label ID="Label4" runat="server" Style="margin-right: 5px;" Text="Số giờ :"></asp:Label>
+                            <asp:Label ID="lblSoGio" runat="server" Style="margin-right: 5px;" Text=""></asp:Label>
+                            <asp:Label ID="Label5" runat="server" Style="margin-right: 5px;" Text="   phút :"></asp:Label>
+                            <asp:Label ID="lblSoPhut" runat="server" Style="margin-right: 5px;" Text=""></asp:Label>
                             <button type="submit" id="btnSreach" runat="server"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
@@ -216,9 +214,67 @@
                 </td>
             </tr>
             <tr>
+                <td colspan="2" style="width: 100%;">
+                    <asp:GridView ID="gridNhapThoiGian" runat="server" AutoGenerateColumns="False" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="3" ShowFooter="True" Width="100%">
+                        <Columns>
+                            <asp:BoundField DataField="STT" HeaderText="STT">
+                                <HeaderStyle HorizontalAlign="Center" Width="10%" />
+                                <ItemStyle HorizontalAlign="Center" Width="10%" />
+                            </asp:BoundField>
+                            <asp:BoundField DataField="PhongBanID" HeaderText="PhongBanID" Visible="false">
+                                <HeaderStyle HorizontalAlign="Center" Width="100px" />
+                                <ItemStyle HorizontalAlign="Center" Width="100px" />
+                            </asp:BoundField>
+                            <asp:BoundField DataField="TenPhongBan" HeaderText="Tổ may">
+                                <HeaderStyle HorizontalAlign="Center" Width="20%" />
+                                <ItemStyle HorizontalAlign="Center" Width="20%" />
+                            </asp:BoundField>
+                            <asp:TemplateField HeaderText="Bắt đầu">
+                                <HeaderStyle HorizontalAlign="Center" Width="15%" />
+                                <ItemStyle HorizontalAlign="Right" Width="15%" />
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtStartDate" runat="server" Text='<%#Eval("TuGio","{0:HH:mm}") %>' Width="100%" Style="text-align: center;" TextMode="Time" ReadOnly="true"></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Kết thúc">
+                                <HeaderStyle HorizontalAlign="Center" Width="15%" />
+                                <ItemStyle HorizontalAlign="Right" Width="15%" />
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtEndDate" runat="server" Text='<%#Eval("DenGio","{0:HH:mm}") %>' Width="100%" Style="text-align: center;" TextMode="Time" ReadOnly="true"></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Số giây">
+                                <HeaderStyle HorizontalAlign="Center" Width="10%" />
+                                <ItemStyle HorizontalAlign="Right" Width="10%" />
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtThoiGian" runat="server" Text='<%#Eval("ThoiGian") %>' Width="100%" Style="text-align: right;" ReadOnly="true"></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Ghi chú">
+                                <HeaderStyle HorizontalAlign="Center" Width="25%" />
+                                <ItemStyle HorizontalAlign="Right" Width="25%" />
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtGhiChu" runat="server" Text='<%#Eval("GhiChu") %>' Width="100%" ReadOnly="true"></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+
+                        </Columns>
+                        <FooterStyle BackColor="White" ForeColor="#000066" />
+                        <HeaderStyle BackColor="#006699" Font-Bold="True" ForeColor="White" />
+                        <PagerStyle BackColor="White" ForeColor="#000066" HorizontalAlign="Left" />
+                        <RowStyle ForeColor="#000066" />
+                        <SelectedRowStyle BackColor="#669999" Font-Bold="True" ForeColor="White" />
+                        <SortedAscendingCellStyle BackColor="#F1F1F1" />
+                        <SortedAscendingHeaderStyle BackColor="#007DBB" />
+                        <SortedDescendingCellStyle BackColor="#CAC9C9" />
+                        <SortedDescendingHeaderStyle BackColor="#00547E" />
+                    </asp:GridView>
+                </td>
+            </tr>
+            <tr>
                 <td colspan="2">
 
-                    <asp:GridView ID="gridNangSuatNhayKhau" runat="server" BorderColor="#CCCCCC" BorderStyle="None" 
+                    <asp:GridView ID="gridNangSuatNhayKhau" runat="server" BorderColor="#CCCCCC" BorderStyle="None"
                         BorderWidth="1px" AutoGenerateColumns="False" Width="100%" BackColor="White" OnRowDataBound="gridNangSuatNhayKhau_RowDataBound" OnRowCommand="gridNangSuatNhayKhau_RowCommand">
                         <AlternatingRowStyle CssClass="GridStyle_AltRowStyle" />
                         <HeaderStyle CssClass="GridStyle_HeaderStyle" BackColor="#006699" Font-Bold="True" ForeColor="White" />
@@ -228,7 +284,7 @@
                         <Columns>
                             <asp:TemplateField HeaderText="TT">
                                 <HeaderStyle HorizontalAlign="Center" VerticalAlign="Middle" Width="30px" />
-                                <ItemStyle HorizontalAlign="Center" Width="7%" ></ItemStyle>
+                                <ItemStyle HorizontalAlign="Center" Width="7%"></ItemStyle>
                                 <ItemTemplate>
                                     <asp:Label ID="lblSTT_String" runat="server" Text='<%#Eval("STT_String") %>' Width="100%"></asp:Label>
                                 </ItemTemplate>
@@ -244,22 +300,22 @@
                                     <asp:Label ID="lblNhomSizeNhayKhau" runat="server" Text='<%#Eval("NhomSize") %>' Width="100%" Visible="false"></asp:Label>
                                     <asp:Label ID="lblID_CachMayNhayKhau" runat="server" Text='<%#Eval("ID_CachMay") %>' Width="100%" Visible="false"></asp:Label>
                                     <asp:Label ID="lblIsBTP" runat="server" Text='<%#Eval("IsBTP") %>' Width="100%" Visible="false"></asp:Label>
-                                    <asp:Label ID="lblMaHangNhayKhau" runat="server" Text='<%#Eval("Mahang") %>' Width="100%"></asp:Label>                                    
+                                    <asp:Label ID="lblMaHangNhayKhau" runat="server" Text='<%#Eval("Mahang") %>' Width="100%"></asp:Label>
                                 </ItemTemplate>
-                            </asp:TemplateField>                         
+                            </asp:TemplateField>
 
                             <asp:TemplateField HeaderText="Công đoạn">
                                 <HeaderStyle Width="50%" HorizontalAlign="Center" VerticalAlign="Middle" />
                                 <ItemStyle Width="50%"></ItemStyle>
-                                 <HeaderTemplate>
-                                    <div style="width:80%;text-align:center;display:inline;margin-top: 3px;">
-                                        <asp:Label ID="lblConDoan" runat="server" Text="Công đoạn" Width="79%" Font-Bold="True" ForeColor="White" style="margin-top: 3px;"></asp:Label>
+                                <HeaderTemplate>
+                                    <div style="width: 80%; text-align: center; display: inline; margin-top: 3px;">
+                                        <asp:Label ID="lblConDoan" runat="server" Text="Công đoạn" Width="79%" Font-Bold="True" ForeColor="White" Style="margin-top: 3px;"></asp:Label>
                                     </div>
-                                    <div style="float:right;width:20%;display:inline;">
-                                        <asp:LinkButton ID="lbtnNK_CT" runat="server" width="20%" Font-Bold="True" ForeColor="White" style="float: right;margin-right: 15px;" ToolTip="Chi tiết" OnClick="lbtnNK_CT_Click"><i class="fa fa-forward"></i></asp:LinkButton>
-                                        <asp:LinkButton ID="LinkNK_AnCT" runat="server" width="20%" Font-Bold="True" ForeColor="White" style="float: right;margin-right: 15px;" ToolTip="Ẩn chi tiết" OnClick="LinkNK_AnCT_Click" Visible="false"><i class="fa fa-backward"></i></asp:LinkButton>
+                                    <div style="float: right; width: 20%; display: inline;">
+                                        <asp:LinkButton ID="lbtnNK_CT" runat="server" Width="20%" Font-Bold="True" ForeColor="White" Style="float: right; margin-right: 15px;" ToolTip="Chi tiết" OnClick="lbtnNK_CT_Click"><i class="fa fa-forward"></i></asp:LinkButton>
+                                        <asp:LinkButton ID="LinkNK_AnCT" runat="server" Width="20%" Font-Bold="True" ForeColor="White" Style="float: right; margin-right: 15px;" ToolTip="Ẩn chi tiết" OnClick="LinkNK_AnCT_Click" Visible="false"><i class="fa fa-backward"></i></asp:LinkButton>
                                     </div>
-                                </HeaderTemplate> 
+                                </HeaderTemplate>
                                 <ItemTemplate>
                                     <asp:Label ID="lblTenCongDoanNhayKhau" runat="server" Text='<%#Eval("TenCongDoan") %>' Width="100%"></asp:Label>
                                 </ItemTemplate>
@@ -280,7 +336,7 @@
                                 <ItemTemplate>
                                     <asp:Label ID="lblHSNhayKhau" runat="server" Text="" Width="100%" Visible="false"></asp:Label>
                                     <asp:Label ID="lblLuyKeNK" runat="server" Text='<%#Eval("LuyKe","{0:#,0.##}") %>' Width="100%"></asp:Label>
-                                    <asp:Label ID="lblSoLuong_CapBTP" runat="server" Text='<%#Eval("SoLuong_CapBTP") %>' Visible ="false"></asp:Label>
+                                    <asp:Label ID="lblSoLuong_CapBTP" runat="server" Text='<%#Eval("SoLuong_CapBTP") %>' Visible="false"></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
 
@@ -309,7 +365,7 @@
                     </asp:GridView>
                 </td>
             </tr>
-                        <%--<tr>
+            <%--<tr>
                 <td colspan="2">
 
                     <asp:GridView ID="gridThoiGianNhayKhau" runat="server" BorderColor="#CCCCCC" BorderStyle="None" 
@@ -414,7 +470,7 @@
                                 <HeaderStyle HorizontalAlign="Center" />
                                 <ItemStyle HorizontalAlign="Right" />
                             </asp:BoundField>
-<%--                            <asp:BoundField DataField="TMU" DataFormatString="{0:#,0.##}" HeaderText="TMU" SortExpression="TMU">
+                            <%--                            <asp:BoundField DataField="TMU" DataFormatString="{0:#,0.##}" HeaderText="TMU" SortExpression="TMU">
                                 <HeaderStyle HorizontalAlign="Center" />
                                 <ItemStyle HorizontalAlign="Right" />
                             </asp:BoundField>
@@ -437,5 +493,5 @@
             </div>
         </div>
     </div>
-    
+
 </asp:Content>

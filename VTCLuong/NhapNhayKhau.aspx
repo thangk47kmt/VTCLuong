@@ -53,10 +53,17 @@
                                 <HeaderStyle HorizontalAlign="Center" Width="10%" />
                                 <ItemStyle HorizontalAlign="Center" Width="10%" />
                             </asp:BoundField>
-                            <asp:BoundField DataField="PhongBanID" HeaderText="PhongBanID" Visible="false">
+                            <%--<asp:BoundField DataField="PhongBanID" HeaderText="PhongBanID" Visible="false">
                                 <HeaderStyle HorizontalAlign="Center" Width="100px" />
                                 <ItemStyle HorizontalAlign="Center" Width="100px" />
-                            </asp:BoundField>
+                            </asp:BoundField>--%>
+                            <asp:TemplateField HeaderText="PhongBanID" Visible="true">
+                                <HeaderStyle HorizontalAlign="Center" Width="10%" />
+                                <ItemStyle HorizontalAlign="Right" Width="10%" />
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtPhongBanID" runat="server" Text='<%#Eval("PhongBanID") %>' Width="100%" Style="text-align: right;"></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                             <asp:BoundField DataField="TenPhongBan" HeaderText="Tổ may">
                                 <HeaderStyle HorizontalAlign="Center" Width="20%" />
                                 <ItemStyle HorizontalAlign="Center" Width="20%" />
@@ -104,9 +111,7 @@
                     </asp:GridView>
                 </td>
             </tr>
-            <%--<tr>
-                <button type="submit" id="btnThemThoiGian" runat="server" style="float: right; margin-right: 5px;">DL đã chọn</button>
-            </tr>--%>
+
             <tr>
                 <td colspan="2">
                     <asp:GridView ID="gridNangSuatNhayKhau" runat="server" BorderColor="#CCCCCC" BorderStyle="None"

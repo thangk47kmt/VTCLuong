@@ -18,6 +18,7 @@ namespace TNGLuong
         TNG_CTLDbContact db = null;
         string strPreviousRowID = string.Empty;
         int intSubTotalIndex = 1;
+        DataTable dtTG = new DataTable();
         protected void Page_Load(object sender, EventArgs e)
         {
             db = new TNG_CTLDbContact();
@@ -65,6 +66,7 @@ namespace TNGLuong
                         loadDataGridToMay();
                         loadGridNhayKhau();
                         checkNgayNhapNS();
+                        loadDataGrid();
                     }
                 }
             }
@@ -190,7 +192,7 @@ namespace TNGLuong
                     m_iMaHangID = Convert.ToInt32(ddlMaHang.SelectedValue.ToString());
                 }
                 string nameNSCache = "NS" + DateTime.Parse(txtDate.Text).ToString("dd-MM-yyyy");
-                string sss = Session["DonViID_Cha"].ToString();
+                //string sss = Session["DonViID_Cha"].ToString();
 
                 if (Session["IsKCS"] != null)
                     m_bIsKCS = bool.Parse(Session["IsKCS"].ToString());
@@ -436,6 +438,7 @@ namespace TNGLuong
                 loadDataGridToMay();
                 loadGridNhayKhau();
                 checkNgayNhapNS();
+                loadDataGrid();
             }            
         }
 
@@ -618,13 +621,13 @@ namespace TNGLuong
                     divThongBao.Style["display"] = "block";
                     return;
                 }
-                //else if(checkLuyKe_ToMay() == false)
+                //else if (checkLuyKe_ToMay() == false)
                 //{
                 //    lblMessenger.Text = "Lũy kế số lượng thực hiện lớn hơn tổng số lượng cấp BTP!";
                 //    addthismodalContact.Style["display"] = "block";
                 //    divThongBao.Style["display"] = "block";
                 //    return;
-                //}    
+                //}
                 else
                 { 
                     int id = 0;
@@ -772,7 +775,7 @@ namespace TNGLuong
                     double.TryParse(sSoLuong_CapBTP, out soluongBTP);
                     string luykecd = ((Label)row.Cells[0].FindControl("lblLuyKeCD")).Text;
                     CheckBox chk = (CheckBox)row.Cells[0].FindControl("chkIsBTP");
-                    if (!string.IsNullOrEmpty(txt.Text) && !string.IsNullOrEmpty(lblTHGoc) && !string.IsNullOrEmpty(luykecd) && double.Parse(txt.Text.Trim()) > 0 && !lblTHGoc.Trim().Equals(txt.Text.Trim()) && chk != null && chk.Checked == true)
+                    if (!string.IsNullOrEmpty(txt.Text) && !string.IsNullOrEmpty(lblTHGoc) && !string.IsNullOrEmpty(luykecd) && double.Parse(txt.Text.Trim()) > 0 && !lblTHGoc.Trim().Equals(txt.Text.Trim()) && chk != null)
                     {
                         double totalSL = double.Parse(txt.Text.Trim()) + double.Parse(luykecd);
                         if (soluongBTP < totalSL)
@@ -867,28 +870,28 @@ namespace TNGLuong
             return sus;
         }
 
-        protected bool checkLuyKe_ToMay()
-        {
-            bool sus = true;
-            foreach (GridViewRow row in gridNangSuatToMay.Rows)
-            {
-                if (row.RowType == DataControlRowType.DataRow)
-                {
-                    TextBox txt = (TextBox)row.Cells[5].FindControl("txtThucHien_NhanVienToMay");
-                    string luyKe = ((Label)row.Cells[0].FindControl("lblLuyKeToMay")).Text;
-                    //Label luyKe = (Label)row.Cells[0].FindControl("LuyKe");
-                    string sSoLuong_CapBTP = ((Label)row.Cells[0].FindControl("g_lblSoLuong_CapBTP")).Text;
+        //protected bool checkLuyKe_ToMay()
+        //{
+        //    bool sus = true;
+        //    foreach (GridViewRow row in gridNangSuatToMay.Rows)
+        //    {
+        //        if (row.RowType == DataControlRowType.DataRow)
+        //        {
+        //            TextBox txt = (TextBox)row.Cells[5].FindControl("txtThucHien_NhanVienToMay");
+        //            string luyKe = ((Label)row.Cells[0].FindControl("lblLuyKeToMay")).Text;
+        //            //Label luyKe = (Label)row.Cells[0].FindControl("LuyKe");
+        //            string sSoLuong_CapBTP = ((Label)row.Cells[0].FindControl("g_lblSoLuong_CapBTP")).Text;
 
-                    if (!string.IsNullOrEmpty(txt.Text) && (double.Parse(txt.Text.Trim()) + double.Parse(luyKe)) > double.Parse(sSoLuong_CapBTP))
-                    {
-                        txt.Text = "0";
-                        sus = false;
-                        break;
-                    }
-                }
-            }
-            return sus;
-        }
+        //            if (!string.IsNullOrEmpty(txt.Text) && (double.Parse(txt.Text.Trim()) + double.Parse(luyKe)) > double.Parse(sSoLuong_CapBTP))
+        //            {
+        //                txt.Text = "0";
+        //                sus = false;
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    return sus;
+        //}
 
         protected bool checkValueAm_NhayKhau()
         {
@@ -1342,6 +1345,80 @@ namespace TNGLuong
                 return true;
             else
                 return false;
+        }
+
+        protected void loadDataGrid()
+        {
+            try
+            {
+                int mansid = 0;
+                if (Session["userid"] != null)
+                    mansid = Convert.ToInt32(Session["userid"].ToString());
+
+                DateTime dte = DateTime.Parse(txtDate.Text);
+
+                SqlParameter pr1x = new SqlParameter();
+                pr1x.ParameterName = "@MaNS_ID";
+                pr1x.Value = mansid;
+                SqlParameter pr2x = new SqlParameter();
+                pr2x.ParameterName = "@Ngay";
+                pr2x.Value = dte.Date;
+
+                object[] sqlPr =
+                {
+                    new SqlParameter("@MaNS_ID", mansid),
+                    new SqlParameter("@Ngay", dte.Date),
+                };
+                string sqlQuery = "[dbo].[LCB_ThoiGian_NhayKhau_Select_DaNhap] @MaNS_ID,@Ngay";
+                List<LCB_ThoiGian_NhayKhau> lst = new List<LCB_ThoiGian_NhayKhau>();
+                // DataTable dtCheck = db.Database.SqlQuery<LCB_ThoiGian_NhayKhau>(sqlQuery, sqlPr);
+
+                lst = db.Database.SqlQuery<LCB_ThoiGian_NhayKhau>(sqlQuery, sqlPr).ToList();
+                dtTG = ultils.CreateDataTable<LCB_ThoiGian_NhayKhau>(lst);
+                decimal total = 0;
+
+
+                if (lst != null && lst.Count > 0)
+                {
+                    DataTable dtx = ultils.CreateDataTable<LCB_ThoiGian_NhayKhau>(lst);
+                    ViewState["gridNhapThoiGian"] = dtx;
+                    gridNhapThoiGian.DataSource = lst;
+                    gridNhapThoiGian.DataBind();
+
+                    gridNhapThoiGian.FooterRow.Cells[0].Text = "Tổng (giây): ";
+                    gridNhapThoiGian.FooterRow.Cells[0].Font.Bold = true;
+                    gridNhapThoiGian.FooterRow.Cells[0].ColumnSpan = 3;
+                    gridNhapThoiGian.FooterRow.Cells[1].Visible = false;
+                    gridNhapThoiGian.FooterRow.Cells[2].Visible = false;
+                    gridNhapThoiGian.FooterRow.Cells[3].Visible = false;
+                    for (int i = 0; i < lst.Count; i++)
+                    {
+                        LCB_ThoiGian_NhayKhau ls = lst[i];
+                        total += ls.ThoiGian;
+                    }
+                    gridNhapThoiGian.FooterRow.Cells[5].Text = string.Format("{0:0.#}", total);
+                    gridNhapThoiGian.FooterRow.Cells[5].Font.Bold = true;
+                    gridNhapThoiGian.FooterRow.Cells[5].Style["text-align"] = "right";
+                    gridNhapThoiGian.FooterRow.Cells[5].Style["padding-right"] = "12px";
+                    gridNhapThoiGian.FooterRow.BackColor = System.Drawing.Color.Beige;
+                }
+                else
+                {
+                    List<LCB_ThoiGian_NhayKhau> lstN = new List<LCB_ThoiGian_NhayKhau>();
+                    DataTable dt = ultils.CreateDataTableStr<LCB_ThoiGian_NhayKhau>(lstN);
+                    dt.Rows.Add(dt.NewRow());
+                    gridNhapThoiGian.DataSource = dt;
+                    gridNhapThoiGian.DataBind();
+                    gridNhapThoiGian.Rows[0].Cells.Clear();
+                    gridNhapThoiGian.Rows[0].Cells.Add(new TableCell());
+                    gridNhapThoiGian.Rows[0].Cells[0].ColumnSpan = dt.Columns.Count;
+                    gridNhapThoiGian.Rows[0].Cells[0].Text = "Chưa có dữ liệu ..!";
+                    gridNhapThoiGian.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
+
+                }    
+
+            }
+            catch (Exception ex) { }
         }
     }
 }
