@@ -453,7 +453,7 @@
                         <button type="button" class="close" data-dismiss="modal" id="btncloseHD" runat="server" style="margin-top: -1em;">×</button>
                     </div>
                 </div>
-                <div class="modal-body content_popupform">
+                <div class="modal-body content_popupform" style="max-height: 80vh; overflow-y: auto;">
                     <asp:GridView ID="gridHuongDanThaoTac" runat="server" AutoGenerateColumns="False" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="4" Width="100%" OnRowCreated="gridHuongDanThaoTac_RowCreated" OnRowDataBound="gridHuongDanThaoTac_RowDataBound">
                         <Columns>
                             <asp:TemplateField HeaderText="STT">

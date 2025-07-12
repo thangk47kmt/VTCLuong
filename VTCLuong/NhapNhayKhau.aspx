@@ -57,7 +57,7 @@
                                 <HeaderStyle HorizontalAlign="Center" Width="100px" />
                                 <ItemStyle HorizontalAlign="Center" Width="100px" />
                             </asp:BoundField>--%>
-                            <asp:TemplateField HeaderText="PhongBanID" Visible="true">
+                            <asp:TemplateField HeaderText="PhongBanID" Visible="false">
                                 <HeaderStyle HorizontalAlign="Center" Width="10%" />
                                 <ItemStyle HorizontalAlign="Right" Width="10%" />
                                 <ItemTemplate>

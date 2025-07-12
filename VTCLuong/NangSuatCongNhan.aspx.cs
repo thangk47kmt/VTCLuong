@@ -561,6 +561,23 @@ namespace TNGLuong
         }
         protected void btnSaveToMay_Click(object sender, EventArgs e)
         {
+            DateTime daNgay = DateTime.Parse(txtDate.Text);
+            if (daNgay.Date == DateTime.Now.Date && DateTime.Now.Hour >= 21)
+            {
+                lblMessenger.Text = "Không thể cập nhật dữ liệu năng suất sau 21h!";
+                addthismodalContact.Style["display"] = "block";
+                divThongBao.Style["display"] = "block";
+                return;
+            }
+
+            if (daNgay.Date < DateTime.Now.Date)
+            {
+                lblMessenger.Text = "Không thể cập nhật dữ liệu ngày đã qua!";
+                addthismodalContact.Style["display"] = "block";
+                divThongBao.Style["display"] = "block";
+                return;
+            }
+
             try
             {
                 decimal tyle = 0;
@@ -621,13 +638,13 @@ namespace TNGLuong
                     divThongBao.Style["display"] = "block";
                     return;
                 }
-                //else if (checkLuyKe_ToMay() == false)
-                //{
-                //    lblMessenger.Text = "Lũy kế số lượng thực hiện lớn hơn tổng số lượng cấp BTP!";
-                //    addthismodalContact.Style["display"] = "block";
-                //    divThongBao.Style["display"] = "block";
-                //    return;
-                //}
+                else if (checkLuyKeToMay() == false)
+                {
+                    lblMessenger.Text = "Lũy kế số lượng thực hiện lớn hơn tổng số lượng cấp BTP!";
+                    addthismodalContact.Style["display"] = "block";
+                    divThongBao.Style["display"] = "block";
+                    return;
+                }
                 else
                 { 
                     int id = 0;
@@ -773,17 +790,25 @@ namespace TNGLuong
                     string lblTHGoc = ((Label)row.Cells[0].FindControl("lblThucHienGoc")).Text;
                     string sSoLuong_CapBTP = ((Label)row.Cells[0].FindControl("g_lblSoLuong_CapBTP")).Text;
                     double.TryParse(sSoLuong_CapBTP, out soluongBTP);
-                    string luykecd = ((Label)row.Cells[0].FindControl("lblLuyKeCD")).Text;
+                    //string luykecd = ((Label)row.Cells[0].FindControl("lblLuyKeCD")).Text;
+                    string luyKe = ((Label)row.Cells[0].FindControl("lblLuyKeCD")).Text;
                     CheckBox chk = (CheckBox)row.Cells[0].FindControl("chkIsBTP");
-                    if (!string.IsNullOrEmpty(txt.Text) && !string.IsNullOrEmpty(lblTHGoc) && !string.IsNullOrEmpty(luykecd) && double.Parse(txt.Text.Trim()) > 0 && !lblTHGoc.Trim().Equals(txt.Text.Trim()) && chk != null)
+                    //&& !lblTHGoc.Trim().Equals(txt.Text.Trim())
+                    //if (!string.IsNullOrEmpty(txt.Text) && !string.IsNullOrEmpty(lblTHGoc) && !string.IsNullOrEmpty(luykecd) && double.Parse(txt.Text.Trim()) > 0  && chk != null)
+                    //{
+                    //    double totalSL = double.Parse(txt.Text.Trim()) + double.Parse(luykecd);
+                    //    if (soluongBTP < totalSL)
+                    //    {
+                    //        txt.Text = "0";
+                    //        sus = false;
+                    //        break;
+                    //    }
+                    //}
+                    if (!string.IsNullOrEmpty(txt.Text) && (double.Parse(txt.Text.Trim()) + double.Parse(luyKe)) > double.Parse(sSoLuong_CapBTP))
                     {
-                        double totalSL = double.Parse(txt.Text.Trim()) + double.Parse(luykecd);
-                        if (soluongBTP < totalSL)
-                        {
-                            txt.Text = "0";
-                            sus = false;
-                            break;
-                        }
+                        txt.Text = "0";
+                        sus = false;
+                        break;
                     }
                 }
             }
@@ -1093,6 +1118,21 @@ namespace TNGLuong
 
         protected void btnNhapNhayKhau_Click(object sender, EventArgs e)
         {
+            DateTime daNgay = DateTime.Parse(txtDate.Text);
+            if (daNgay.Date == DateTime.Now.Date && DateTime.Now.Hour >= 21)
+            {
+                lblMessenger.Text = "Không thể cập nhật dữ liệu năng suất sau 21h!";
+                addthismodalContact.Style["display"] = "block";
+                divThongBao.Style["display"] = "block";
+                return;
+            }
+            if (daNgay.Date < DateTime.Now.Date)
+            {
+                lblMessenger.Text = "Không thể cập nhật dữ liệu ngày đã qua!";
+                addthismodalContact.Style["display"] = "block";
+                divThongBao.Style["display"] = "block";
+                return;
+            }
             if (Session["username"] != null)
             {
                 Response.Redirect("NhapNhayKhau.aspx");

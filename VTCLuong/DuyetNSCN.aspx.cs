@@ -79,7 +79,8 @@ namespace TNGLuong
                 {
                     Session["DataUserCN"] = null;
                 }
-                if (ds != null && ds.Tables[0] != null && ds.Tables[0].Rows.Count > 0)
+                //if (ds != null && ds.Tables[0] != null && ds.Tables[0].Rows.Count > 0)
+                if (ds != null && ds.Tables[0] != null)
                 {
                     pnameCNDN.Visible = true;
                     lvUser.DataSource = ds.Tables[0];
