@@ -128,6 +128,25 @@ namespace TNGLuong
 
         protected void btnSaveNhayKhau_Click(object sender, EventArgs e)
         {
+            DateTime daNgay = DateTime.Parse(txtDate.Text);
+            if (daNgay.Date == DateTime.Now.Date && DateTime.Now.Hour >= 21)
+            {
+                lblMessenger.Text = "Không thể cập nhật dữ liệu năng suất sau 21h!";
+                addthismodalContact.Style["display"] = "block";
+                //divThongBao.Style["display"] = "block";
+                return;
+            }
+
+            if (daNgay.Date < DateTime.Now.Date)
+            {
+                if (DateTime.Now.Date != DateTime.Parse("23/09/2025").Date || daNgay.Date != DateTime.Parse("22/09/2025").Date)
+                {
+                    lblMessenger.Text = "Không thể cập nhật dữ liệu ngày đã qua!";
+                    addthismodalContact.Style["display"] = "block";
+                    //divThongBao.Style["display"] = "block";
+                    return;
+                }
+            }
             lblMessenger.Text = "Bạn có muốn lưu dữ liệu nhảy khâu ngày <b><font color=\"red\"> \"" + txtDate.Text.ToUpper() + "\"</font></b>  ko?";
             addthismodalContact.Style["display"] = "block";
         }
@@ -718,6 +737,26 @@ namespace TNGLuong
 
         protected void btnOK_Click(object sender, EventArgs e)
         {
+            DateTime daNgay = DateTime.Parse(txtDate.Text);
+            if (daNgay.Date == DateTime.Now.Date && DateTime.Now.Hour >= 21)
+            {
+                lblMessenger.Text = "Không thể cập nhật dữ liệu năng suất sau 21h!";
+                addthismodalContact.Style["display"] = "block";
+                //divThongBao.Style["display"] = "block";
+                return;
+            }
+
+            if (daNgay.Date < DateTime.Now.Date)
+            {
+                if (DateTime.Now.Date != DateTime.Parse("23/09/2025").Date || daNgay.Date != DateTime.Parse("22/09/2025").Date)
+                {
+                    lblMessenger.Text = "Không thể cập nhật dữ liệu ngày đã qua!";
+                    addthismodalContact.Style["display"] = "block";
+                    //divThongBao.Style["display"] = "block";
+                    return;
+                }
+            }
+
             try
             {
                 DataTable dtNhayKhau = new DataTable("dtNhayKhau");

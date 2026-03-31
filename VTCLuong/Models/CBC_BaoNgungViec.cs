@@ -22,5 +22,9 @@ namespace TNGLuong.Models
         public DateTime ThoiGian_BatDau { get; set; }
 
         public DateTime? ThoiGian_KetThuc { get; set; }
+
+        public Int32 PhongBanID { get; set; }
+
+        public string ViTri { get; set; }
     }
 }

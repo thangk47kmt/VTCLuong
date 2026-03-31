@@ -562,21 +562,24 @@ namespace TNGLuong
         protected void btnSaveToMay_Click(object sender, EventArgs e)
         {
             DateTime daNgay = DateTime.Parse(txtDate.Text);
-            if (daNgay.Date == DateTime.Now.Date && DateTime.Now.Hour >= 21)
+            if (daNgay.Date == DateTime.Now.Date && DateTime.Now.Hour >= 23)
             {
-                lblMessenger.Text = "Không thể cập nhật dữ liệu năng suất sau 21h!";
+                lblMessenger.Text = "Không thể cập nhật dữ liệu năng suất sau 23h!";
                 addthismodalContact.Style["display"] = "block";
                 divThongBao.Style["display"] = "block";
                 return;
             }
 
-            if (daNgay.Date < DateTime.Now.Date)
-            {
-                lblMessenger.Text = "Không thể cập nhật dữ liệu ngày đã qua!";
-                addthismodalContact.Style["display"] = "block";
-                divThongBao.Style["display"] = "block";
-                return;
-            }
+            //if (daNgay.Date < DateTime.Now.Date)
+            //{
+            //    if (DateTime.Now.Date != DateTime.Parse("23/09/2025").Date || daNgay.Date != DateTime.Parse("22/09/2025").Date)
+            //    {
+            //        lblMessenger.Text = "Không thể cập nhật dữ liệu ngày đã qua!";
+            //        addthismodalContact.Style["display"] = "block";
+            //        divThongBao.Style["display"] = "block";
+            //        return;
+            //    }
+            //}
 
             try
             {
@@ -638,13 +641,13 @@ namespace TNGLuong
                     divThongBao.Style["display"] = "block";
                     return;
                 }
-                else if (checkLuyKeToMay() == false)
-                {
-                    lblMessenger.Text = "Lũy kế số lượng thực hiện lớn hơn tổng số lượng cấp BTP!";
-                    addthismodalContact.Style["display"] = "block";
-                    divThongBao.Style["display"] = "block";
-                    return;
-                }
+                //else if (checkLuyKeToMay() == false)
+                //{
+                //    lblMessenger.Text = "Lũy kế số lượng thực hiện lớn hơn tổng số lượng cấp BTP!";
+                //    addthismodalContact.Style["display"] = "block";
+                //    divThongBao.Style["display"] = "block";
+                //    return;
+                //}
                 else
                 { 
                     int id = 0;
@@ -793,17 +796,6 @@ namespace TNGLuong
                     //string luykecd = ((Label)row.Cells[0].FindControl("lblLuyKeCD")).Text;
                     string luyKe = ((Label)row.Cells[0].FindControl("lblLuyKeCD")).Text;
                     CheckBox chk = (CheckBox)row.Cells[0].FindControl("chkIsBTP");
-                    //&& !lblTHGoc.Trim().Equals(txt.Text.Trim())
-                    //if (!string.IsNullOrEmpty(txt.Text) && !string.IsNullOrEmpty(lblTHGoc) && !string.IsNullOrEmpty(luykecd) && double.Parse(txt.Text.Trim()) > 0  && chk != null)
-                    //{
-                    //    double totalSL = double.Parse(txt.Text.Trim()) + double.Parse(luykecd);
-                    //    if (soluongBTP < totalSL)
-                    //    {
-                    //        txt.Text = "0";
-                    //        sus = false;
-                    //        break;
-                    //    }
-                    //}
                     if (!string.IsNullOrEmpty(txt.Text) && (double.Parse(txt.Text.Trim()) + double.Parse(luyKe)) > double.Parse(sSoLuong_CapBTP))
                     {
                         txt.Text = "0";
@@ -939,6 +931,26 @@ namespace TNGLuong
 
         protected void btnSaveNhayKhau_Click(object sender, EventArgs e)
         {
+            DateTime daNgay = DateTime.Parse(txtDate.Text);
+            if (daNgay.Date == DateTime.Now.Date && DateTime.Now.Hour >= 21)
+            {
+                lblMessenger.Text = "Không thể cập nhật dữ liệu năng suất sau 21h!";
+                addthismodalContact.Style["display"] = "block";
+                divThongBao.Style["display"] = "block";
+                return;
+            }
+
+            if (daNgay.Date < DateTime.Now.Date)
+            {
+                if (DateTime.Now.Date != DateTime.Parse("23/09/2025").Date || daNgay.Date != DateTime.Parse("22/09/2025").Date)
+                {
+                    lblMessenger.Text = "Không thể cập nhật dữ liệu ngày đã qua!";
+                    addthismodalContact.Style["display"] = "block";
+                    divThongBao.Style["display"] = "block";
+                    return;
+                }
+            }
+
             try
             {
                 DataTable dtNhayKhau = new DataTable("dtNhayKhau");
@@ -1126,12 +1138,23 @@ namespace TNGLuong
                 divThongBao.Style["display"] = "block";
                 return;
             }
+            if (daNgay.Date == DateTime.Now.Date && DateTime.Now.Hour >= 21)
+            {
+                lblMessenger.Text = "Không thể cập nhật dữ liệu năng suất sau 21h!";
+                addthismodalContact.Style["display"] = "block";
+                //divThongBao.Style["display"] = "block";
+                return;
+            }
+
             if (daNgay.Date < DateTime.Now.Date)
             {
-                lblMessenger.Text = "Không thể cập nhật dữ liệu ngày đã qua!";
-                addthismodalContact.Style["display"] = "block";
-                divThongBao.Style["display"] = "block";
-                return;
+                if (DateTime.Now.Date != DateTime.Parse("23/09/2025").Date || daNgay.Date != DateTime.Parse("22/09/2025").Date)
+                {
+                    lblMessenger.Text = "Không thể cập nhật dữ liệu ngày đã qua!";
+                    addthismodalContact.Style["display"] = "block";
+                    //divThongBao.Style["display"] = "block";
+                    return;
+                }
             }
             if (Session["username"] != null)
             {

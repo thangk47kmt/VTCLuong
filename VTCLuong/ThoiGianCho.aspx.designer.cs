@@ -7,11 +7,49 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TNGLuong {
-    
-    
-    public partial class ThoiGianCho {
-        
+namespace TNGLuong
+{
+
+
+    public partial class ThoiGianCho
+    {
+
+        /// <summary>
+        /// lblTo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTo;
+
+        /// <summary>
+        /// ddlToMay control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlToMay;
+
+        /// <summary>
+        /// lblTenMH control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTenMH;
+
+        /// <summary>
+        /// txtViTri control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlInputText txtViTri;
+
         /// <summary>
         /// ScriptManager1 control.
         /// </summary>
@@ -20,7 +58,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.ScriptManager ScriptManager1;
-        
+
         /// <summary>
         /// timer1 control.
         /// </summary>
@@ -29,7 +67,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.Timer timer1;
-        
+
         /// <summary>
         /// updPnl control.
         /// </summary>
@@ -38,7 +76,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updPnl;
-        
+
         /// <summary>
         /// btn1 control.
         /// </summary>
@@ -47,7 +85,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTableRow btn1;
-        
+
         /// <summary>
         /// btnBTP control.
         /// </summary>
@@ -56,7 +94,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnBTP;
-        
+
         /// <summary>
         /// btnCoDien control.
         /// </summary>
@@ -65,7 +103,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCoDien;
-        
+
         /// <summary>
         /// btnPhuLieu control.
         /// </summary>
@@ -74,7 +112,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnPhuLieu;
-        
+
         /// <summary>
         /// btn2 control.
         /// </summary>
@@ -83,7 +121,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTableRow btn2;
-        
+
         /// <summary>
         /// btnHuongDan control.
         /// </summary>
@@ -92,7 +130,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnHuongDan;
-        
+
         /// <summary>
         /// btnChatLuong control.
         /// </summary>
@@ -101,7 +139,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnChatLuong;
-        
+
         /// <summary>
         /// btnKhac control.
         /// </summary>
@@ -110,7 +148,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnKhac;
-        
+
         /// <summary>
         /// tdlbl control.
         /// </summary>
@@ -119,7 +157,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTableCell tdlbl;
-        
+
         /// <summary>
         /// lblTieuDe control.
         /// </summary>
@@ -128,7 +166,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTieuDe;
-        
+
         /// <summary>
         /// lblDongHo control.
         /// </summary>
@@ -137,7 +175,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDongHo;
-        
+
         /// <summary>
         /// tdbtn control.
         /// </summary>
@@ -146,7 +184,7 @@ namespace TNGLuong {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTableCell tdbtn;
-        
+
         /// <summary>
         /// btnKetThuc control.
         /// </summary>

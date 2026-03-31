@@ -2,6 +2,22 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div style="width: 100%; font-family: Tahoma; font-size: 12px;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 15%;">
+                <asp:Label ID="lblTo" runat="server" Text="Chuyền" CssClass="margin-top"></asp:Label></td>
+            <td style="width: 30%;">
+                <asp:DropDownList ID="ddlToMay" runat="server" Width="100%" AutoPostBack="True" OnSelectedIndexChanged="ddlToMay_SelectedIndexChanged" DataTextField="TenPhongban" DataValueField="PhongBanID" CssClass="margin-top"></asp:DropDownList>
+            </td>
+            <td style="width: 30%;">
+                <asp:Label ID="lblTenMH" runat="server" Text="   Vị trí số " CssClass="margin-top"></asp:Label></td>
+            <td style="width: 25%;">
+                <input type="text" class="textbox" placeholder="Vị trí trên chuyền" name="vitri" id="txtViTri" runat="server">
+            </td>
+        </tr>
+    </table>
+    </div>
+    <div style="width: 100%; font-family: Tahoma; font-size: 12px;">
         <asp:ScriptManager ID="ScriptManager1" runat="server" EnableCdn="true"></asp:ScriptManager>
         <asp:Timer ID="timer1" runat="server" OnTick="timer1_Tick" Interval="1000"></asp:Timer>
         <asp:UpdatePanel ID="updPnl" runat="server" UpdateMode="Conditional">
