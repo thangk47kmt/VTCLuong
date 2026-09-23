@@ -270,7 +270,13 @@
                         <SortedDescendingHeaderStyle BackColor="#00547E" />
                     </asp:GridView>
                 </td>
+                
             </tr>
+            <tr>
+            <td style="width: 45%" align="right">
+                <asp:Button ID="btnSaveThoiGian" runat="server" Text="Lưu" CssClass="btnSaveThoiGian" OnClick="btnSaveThoiGian_Click" />
+            </td>
+        </tr>
             <tr>
                 <td colspan="2">
 

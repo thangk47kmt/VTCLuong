@@ -1483,5 +1483,139 @@ namespace TNGLuong
             }
             catch (Exception ex) { }
         }
+
+        protected void btnSaveThoiGian_Click(object sender, EventArgs e)
+        {
+            DateTime daNgay = DateTime.Parse(txtDate.Text);
+            if (daNgay.Date == DateTime.Now.Date && DateTime.Now.Hour >= 21)
+            {
+                lblMessenger.Text = "Không thể cập nhật dữ liệu năng suất sau 21h!";
+                addthismodalContact.Style["display"] = "block";
+                divThongBao.Style["display"] = "block";
+                return;
+            }
+
+            if (daNgay.Date < DateTime.Now.Date)
+            {
+                if (DateTime.Now.Date != DateTime.Parse("23/09/2025").Date || daNgay.Date != DateTime.Parse("22/09/2025").Date)
+                {
+                    lblMessenger.Text = "Không thể cập nhật dữ liệu ngày đã qua!";
+                    addthismodalContact.Style["display"] = "block";
+                    divThongBao.Style["display"] = "block";
+                    return;
+                }
+            }
+
+            try
+            {
+                DataTable dtNhayKhau = new DataTable("dtNhayKhau");
+                dtNhayKhau.Columns.Add(new DataColumn("MaNS_ID", typeof(int)));
+                dtNhayKhau.Columns.Add(new DataColumn("PhongBanID_NS", typeof(int)));
+                dtNhayKhau.Columns.Add(new DataColumn("Ngay", typeof(DateTime)));
+                dtNhayKhau.Columns.Add(new DataColumn("ID_CongDoan", typeof(int)));
+                dtNhayKhau.Columns.Add(new DataColumn("MaHang", typeof(string)));
+                dtNhayKhau.Columns.Add(new DataColumn("PhongBanID", typeof(int)));
+                dtNhayKhau.Columns.Add(new DataColumn("NhomSize", typeof(byte)));
+                dtNhayKhau.Columns.Add(new DataColumn("ID_CachMay", typeof(byte)));
+                dtNhayKhau.Columns.Add(new DataColumn("SoLuong_NhayKhau", typeof(int)));
+                if (checkValueAm_NhayKhau() == false)
+                {
+                    lblMessenger.Text = "Số lượng thực hiện không thể nhỏ hơn 0!";
+                    addthismodalContact.Style["display"] = "block";
+                    divThongBao.Style["display"] = "block";
+                    return;
+                }
+                else if (checkLuyKeNhayKhau() == false)
+                {
+                    lblMessenger.Text = "Số thực hiện lớn hơn số cấp Bán thành phẩm lên chuyền!";
+                    addthismodalContact.Style["display"] = "block";
+                    divThongBao.Style["display"] = "block";
+                    return;
+                }
+                else if (checkValueNangSuat() == false)
+                {
+                    lblMessenger.Text = "Số lượng thực hiện không đúng, vui lòng kiểm tra lại.";
+                    addthismodalContact.Style["display"] = "block";
+                    divThongBao.Style["display"] = "block";
+                    return;
+                }
+                else
+                {
+                    int id = 0;
+                    if (gridNangSuatNhayKhau.Rows.Count > 0)
+                    {
+                        int Phongbanid_ns = 0;
+                        int mansid = 0;
+                        if (Session["PhongBanID"] != null)
+                            Phongbanid_ns = Convert.ToInt32(Session["PhongBanID"].ToString());
+                        if (Session["userid"] != null)
+                            mansid = Convert.ToInt32(Session["userid"].ToString());
+                        DateTime dte = DateTime.Parse(txtDate.Text);
+
+                        foreach (GridViewRow row in gridNangSuatNhayKhau.Rows)
+                        {
+                            if (row.RowType == DataControlRowType.DataRow)
+                            {
+                                string lblID_CongDoanNhayKhau = ((Label)row.Cells[0].FindControl("lblID_CongDoanNhayKhau")).Text;
+                                string lblPhongBanIDNhayKhau = ((Label)row.Cells[0].FindControl("lblPhongBanIDNhayKhau")).Text;
+                                string lblMaHangNhayKhau = ((Label)row.Cells[0].FindControl("lblMaHangNhayKhau")).Text;
+                                string lblNhomSizeNhayKhau = ((Label)row.Cells[0].FindControl("lblNhomSizeNhayKhau")).Text;
+                                string lblID_CachMayNhayKhau = ((Label)row.Cells[0].FindControl("lblID_CachMayNhayKhau")).Text;
+                                string nangsuat = ((TextBox)row.Cells[0].FindControl("txtCongNhanNhayKhau")).Text.Trim();
+                                if (!string.IsNullOrEmpty(lblID_CongDoanNhayKhau) && !string.IsNullOrEmpty(nangsuat) && !string.IsNullOrEmpty(lblPhongBanIDNhayKhau) && !string.IsNullOrEmpty(lblMaHangNhayKhau) && !string.IsNullOrEmpty(lblNhomSizeNhayKhau) && !string.IsNullOrEmpty(lblID_CachMayNhayKhau))
+                                {
+                                    string mahang = lblMaHangNhayKhau.Split('/')[1].ToString();
+                                    int idcongdoan = int.Parse(lblID_CongDoanNhayKhau);
+                                    int Phongbanid = int.Parse(lblPhongBanIDNhayKhau);
+                                    byte nhomsize = byte.Parse(lblNhomSizeNhayKhau);
+                                    byte idcanhmay = byte.Parse(lblID_CachMayNhayKhau);
+                                    int ns = int.Parse(nangsuat);
+                                    DataRow dr = dtNhayKhau.NewRow();
+                                    if (ns >= 0 && idcongdoan > 0)
+                                    {
+                                        dr["MaHang"] = mahang.Trim();
+                                        dr["PhongBanID_NS"] = Phongbanid_ns;
+                                        dr["PhongBanID"] = Phongbanid;
+                                        dr["NhomSize"] = nhomsize;
+                                        dr["ID_CachMay"] = idcanhmay;
+                                        dr["ID_CongDoan"] = idcongdoan;
+                                        dr["MaNS_ID"] = mansid;
+                                        dr["Ngay"] = dte.Date;
+                                        dr["SoLuong_NhayKhau"] = ns;
+                                        dtNhayKhau.Rows.Add(dr);
+                                    }
+                                }
+                            }
+                        }
+                        if (dtNhayKhau != null && dtNhayKhau.Rows.Count > 0)
+                        {
+                            var parameter = new SqlParameter("@dtSoLuong", SqlDbType.Structured);
+                            parameter.Value = dtNhayKhau;
+                            parameter.TypeName = "dbo.udt_web_LCB_NhayKhau_Update_SoLuong";
+                            string sqlQuery = "[dbo].[pr_Web_LCB_NhayKhau_Update_SoLuong_UDT] @dtSoLuong";
+                            id = id + db.Database.ExecuteSqlCommand(sqlQuery, parameter);
+                        }
+                        if (id != 0)
+                        {
+                            if (check_LichSuTruyCap_MaNS() == false)
+                            {
+                                LCB_WEB_LichSuCapNhat cls = new LCB_WEB_LichSuCapNhat();
+                                cls.MaNS = Session["username"].ToString();
+                                cls.NgayTruyCap = DateTime.Now;
+                                db.LCB_WEB_LichSuCapNhat.Add(cls);
+                                db.SaveChanges();
+                            }
+                            callstore();
+                            loadDataGridToMay();
+                            loadGridNhayKhau();
+                            lblMessenger.Text = "Đã cập nhật năng suất.";
+                            addthismodalContact.Style["display"] = "block";
+                            divThongBao.Style["display"] = "block";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) { }
+        }
     }
 }
