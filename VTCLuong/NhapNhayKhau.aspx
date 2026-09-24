@@ -38,80 +38,10 @@
                                         <button type="submit" id="btnSreach" runat="server"><i class="fa fa-search"></i></button>
 
                                     </div>
-                                    <div class="search-container">
-                                        <button type="submit" id="btnThemThoiGian" runat="server" style="float: right; margin-right: 5px;">Thêm thời gian</button>
-                                    </div>
                                 </div>
                             </td>
                         </tr>
             </tr>
-            <tr>
-                <td colspan="2">
-                    <asp:GridView ID="gridNhapThoiGian" runat="server" AutoGenerateColumns="False" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="3" ShowFooter="True" Width="100%" OnRowDataBound="gridNhapThoiGian_RowDataBound" OnRowCommand="gridNhapThoiGian_RowCommand" OnRowDeleting="gridNhapThoiGian_RowDeleting">
-                        <Columns>
-                            <asp:BoundField DataField="STT" HeaderText="STT">
-                                <HeaderStyle HorizontalAlign="Center" Width="10%" />
-                                <ItemStyle HorizontalAlign="Center" Width="10%" />
-                            </asp:BoundField>
-                            <%--<asp:BoundField DataField="PhongBanID" HeaderText="PhongBanID" Visible="false">
-                                <HeaderStyle HorizontalAlign="Center" Width="100px" />
-                                <ItemStyle HorizontalAlign="Center" Width="100px" />
-                            </asp:BoundField>--%>
-                            <asp:TemplateField HeaderText="PhongBanID" Visible="false">
-                                <HeaderStyle HorizontalAlign="Center" Width="10%" />
-                                <ItemStyle HorizontalAlign="Right" Width="10%" />
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtPhongBanID" runat="server" Text='<%#Eval("PhongBanID") %>' Width="100%" Style="text-align: right;"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:BoundField DataField="TenPhongBan" HeaderText="Tổ may">
-                                <HeaderStyle HorizontalAlign="Center" Width="20%" />
-                                <ItemStyle HorizontalAlign="Center" Width="20%" />
-                            </asp:BoundField>
-                            <asp:TemplateField HeaderText="Bắt đầu">
-                                <HeaderStyle HorizontalAlign="Center" Width="15%" />
-                                <ItemStyle HorizontalAlign="Right" Width="15%" />
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtStartDate" runat="server" Text='<%#Eval("TuGio","{0:HH:mm}") %>' Width="100%" Style="text-align: center;" TextMode="Time"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Kết thúc">
-                                <HeaderStyle HorizontalAlign="Center" Width="15%" />
-                                <ItemStyle HorizontalAlign="Right" Width="15%" />
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtEndDate" runat="server" Text='<%#Eval("DenGio","{0:HH:mm}") %>' Width="100%" Style="text-align: center;" TextMode="Time"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Số giây">
-                                <HeaderStyle HorizontalAlign="Center" Width="10%" />
-                                <ItemStyle HorizontalAlign="Right" Width="10%" />
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtThoiGian" runat="server" Text='<%#Eval("ThoiGian") %>' Width="100%" Style="text-align: right;"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Ghi chú">
-                                <HeaderStyle HorizontalAlign="Center" Width="25%" />
-                                <ItemStyle HorizontalAlign="Right" Width="25%" />
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtGhiChu" runat="server" Text='<%#Eval("GhiChu") %>' Width="100%"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:ButtonField ButtonType="Button" CommandName="DeleteRow" ControlStyle-Width="100%" Text="Xóa" />
-
-                        </Columns>
-                        <FooterStyle BackColor="White" ForeColor="#000066" />
-                        <HeaderStyle BackColor="#006699" Font-Bold="True" ForeColor="White" />
-                        <PagerStyle BackColor="White" ForeColor="#000066" HorizontalAlign="Left" />
-                        <RowStyle ForeColor="#000066" />
-                        <SelectedRowStyle BackColor="#669999" Font-Bold="True" ForeColor="White" />
-                        <SortedAscendingCellStyle BackColor="#F1F1F1" />
-                        <SortedAscendingHeaderStyle BackColor="#007DBB" />
-                        <SortedDescendingCellStyle BackColor="#CAC9C9" />
-                        <SortedDescendingHeaderStyle BackColor="#00547E" />
-                    </asp:GridView>
-                </td>
-            </tr>
-
             <tr>
                 <td colspan="2">
                     <asp:GridView ID="gridNangSuatNhayKhau" runat="server" BorderColor="#CCCCCC" BorderStyle="None"

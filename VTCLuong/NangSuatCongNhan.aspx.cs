@@ -19,12 +19,14 @@ namespace TNGLuong
         string strPreviousRowID = string.Empty;
         int intSubTotalIndex = 1;
         DataTable dtTG = new DataTable();
+        private List<View_ToMay> _listToMay = null;
         protected void Page_Load(object sender, EventArgs e)
         {
             db = new TNG_CTLDbContact();
             btnclose.ServerClick += new EventHandler(btnclose_Click);
             btncloseHD.ServerClick += new EventHandler(btncloseHD_Click);
             btnSreach.ServerClick += new EventHandler(btnSearch_Click);
+            btnThemThoiGian.ServerClick += new EventHandler(btnThemThoiGian_Click);
 
             if (Session["username"] != null)
             {
@@ -1420,13 +1422,6 @@ namespace TNGLuong
 
                 DateTime dte = DateTime.Parse(txtDate.Text);
 
-                SqlParameter pr1x = new SqlParameter();
-                pr1x.ParameterName = "@MaNS_ID";
-                pr1x.Value = mansid;
-                SqlParameter pr2x = new SqlParameter();
-                pr2x.ParameterName = "@Ngay";
-                pr2x.Value = dte.Date;
-
                 object[] sqlPr =
                 {
                     new SqlParameter("@MaNS_ID", mansid),
@@ -1434,9 +1429,19 @@ namespace TNGLuong
                 };
                 string sqlQuery = "[dbo].[LCB_ThoiGian_NhayKhau_Select_DaNhap] @MaNS_ID,@Ngay";
                 List<LCB_ThoiGian_NhayKhau> lst = new List<LCB_ThoiGian_NhayKhau>();
-                // DataTable dtCheck = db.Database.SqlQuery<LCB_ThoiGian_NhayKhau>(sqlQuery, sqlPr);
 
                 lst = db.Database.SqlQuery<LCB_ThoiGian_NhayKhau>(sqlQuery, sqlPr).ToList();
+
+                // Assign STT and calculate ThoiGian
+                for (int idx = 0; idx < lst.Count; idx++)
+                {
+                    lst[idx].STT = idx + 1;
+                    if (lst[idx].ThoiGian == 0 && lst[idx].DenGio > lst[idx].TuGio)
+                    {
+                        lst[idx].ThoiGian = (int)(lst[idx].DenGio - lst[idx].TuGio).TotalSeconds;
+                    }
+                }
+
                 dtTG = ultils.CreateDataTable<LCB_ThoiGian_NhayKhau>(lst);
                 decimal total = 0;
 
@@ -1450,7 +1455,7 @@ namespace TNGLuong
 
                     gridNhapThoiGian.FooterRow.Cells[0].Text = "Tổng (giây): ";
                     gridNhapThoiGian.FooterRow.Cells[0].Font.Bold = true;
-                    gridNhapThoiGian.FooterRow.Cells[0].ColumnSpan = 3;
+                    gridNhapThoiGian.FooterRow.Cells[0].ColumnSpan = 4;
                     gridNhapThoiGian.FooterRow.Cells[1].Visible = false;
                     gridNhapThoiGian.FooterRow.Cells[2].Visible = false;
                     gridNhapThoiGian.FooterRow.Cells[3].Visible = false;
@@ -1459,163 +1464,289 @@ namespace TNGLuong
                         LCB_ThoiGian_NhayKhau ls = lst[i];
                         total += ls.ThoiGian;
                     }
-                    gridNhapThoiGian.FooterRow.Cells[5].Text = string.Format("{0:0.#}", total);
-                    gridNhapThoiGian.FooterRow.Cells[5].Font.Bold = true;
-                    gridNhapThoiGian.FooterRow.Cells[5].Style["text-align"] = "right";
-                    gridNhapThoiGian.FooterRow.Cells[5].Style["padding-right"] = "12px";
+                    gridNhapThoiGian.FooterRow.Cells[4].Text = string.Format("{0:0.#}", total);
+                    gridNhapThoiGian.FooterRow.Cells[4].Font.Bold = true;
+                    gridNhapThoiGian.FooterRow.Cells[4].Style["text-align"] = "right";
+                    gridNhapThoiGian.FooterRow.Cells[4].Style["padding-right"] = "12px";
                     gridNhapThoiGian.FooterRow.BackColor = System.Drawing.Color.Beige;
                 }
                 else
                 {
-                    List<LCB_ThoiGian_NhayKhau> lstN = new List<LCB_ThoiGian_NhayKhau>();
-                    DataTable dt = ultils.CreateDataTableStr<LCB_ThoiGian_NhayKhau>(lstN);
-                    dt.Rows.Add(dt.NewRow());
+                    DataTable dt = ultils.CreateDataTable<LCB_ThoiGian_NhayKhau>(lst);
+                    DataRow newRow = dt.NewRow();
+                    newRow["STT"] = dt.Rows.Count + 1;
+                    int phongid = 0;
+                    if (Session["PhongBanID"] != null)
+                        phongid = Convert.ToInt32(Session["PhongBanID"].ToString());
+                    newRow["PhongBanID"] = phongid;
+                    newRow["TenPhongBan"] = Session["TenPhongban"] != null ? Session["TenPhongban"].ToString() : "";
+                    newRow["TuGio"] = DateTime.Now.ToString("HH:mm");
+
+                    dt.Rows.Add(newRow);
+
+                    ViewState["gridNhapThoiGian"] = dt;
+
                     gridNhapThoiGian.DataSource = dt;
                     gridNhapThoiGian.DataBind();
-                    gridNhapThoiGian.Rows[0].Cells.Clear();
-                    gridNhapThoiGian.Rows[0].Cells.Add(new TableCell());
-                    gridNhapThoiGian.Rows[0].Cells[0].ColumnSpan = dt.Columns.Count;
-                    gridNhapThoiGian.Rows[0].Cells[0].Text = "Chưa có dữ liệu ..!";
-                    gridNhapThoiGian.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
-
-                }    
+                }
 
             }
             catch (Exception ex) { }
         }
 
+        protected void btnThemThoiGian_Click(object sender, EventArgs e)
+        {
+            if (ViewState["gridNhapThoiGian"] != null)
+            {
+                DataTable dtGrd = (DataTable)ViewState["gridNhapThoiGian"];
+
+                DataRow newRow = dtGrd.NewRow();
+                newRow["STT"] = dtGrd.Rows.Count + 1;
+                int phongid = 0;
+                if (Session["PhongBanID"] != null)
+                    phongid = Convert.ToInt32(Session["PhongBanID"].ToString());
+                newRow["PhongBanID"] = phongid;
+                newRow["TenPhongBan"] = Session["TenPhongban"] != null ? Session["TenPhongban"].ToString() : "";
+                newRow["TuGio"] = DateTime.Now.ToString("HH:mm");
+
+                dtGrd.Rows.Add(newRow);
+
+                ViewState["gridNhapThoiGian"] = dtGrd;
+
+                gridNhapThoiGian.DataSource = dtGrd;
+                gridNhapThoiGian.DataBind();
+            }
+        }
+
         protected void btnSaveThoiGian_Click(object sender, EventArgs e)
         {
-            DateTime daNgay = DateTime.Parse(txtDate.Text);
-            if (daNgay.Date == DateTime.Now.Date && DateTime.Now.Hour >= 21)
+            if (checkThoiGianNhayKhau() == false)
             {
-                lblMessenger.Text = "Không thể cập nhật dữ liệu năng suất sau 21h!";
+                lblMessenger.Text = "Thời gian nhảy khâu không hợp lệ, vui lòng kiểm tra lại.";
                 addthismodalContact.Style["display"] = "block";
                 divThongBao.Style["display"] = "block";
                 return;
             }
-
-            if (daNgay.Date < DateTime.Now.Date)
+            if (gridNhapThoiGian.Rows.Count > 0)
             {
-                if (DateTime.Now.Date != DateTime.Parse("23/09/2025").Date || daNgay.Date != DateTime.Parse("22/09/2025").Date)
+                try
                 {
-                    lblMessenger.Text = "Không thể cập nhật dữ liệu ngày đã qua!";
+                    int mansid_tg = 0;
+                    if (Session["userid"] != null)
+                        mansid_tg = Convert.ToInt32(Session["userid"].ToString());
+                    DateTime dte_tg = DateTime.Parse(txtDate.Text);
+
+                    SqlParameter pr1_tg = new SqlParameter();
+                    pr1_tg.ParameterName = "@daNgay";
+                    pr1_tg.Value = dte_tg.ToString("MM/dd/yyyy");
+                    SqlParameter pr2_tg = new SqlParameter();
+                    pr2_tg.ParameterName = "@iMaNS_ID";
+                    pr2_tg.Value = mansid_tg;
+
+                    string sqlXoa_ThoiGian = "[dbo].[LCB_ThoiGian_NhayKhau_Delete_wMaNS_ID_and_Ngay] @daNgay, @iMaNS_ID";
+                    db.Database.ExecuteSqlCommand(sqlXoa_ThoiGian, pr1_tg, pr2_tg);
+
+                    foreach (GridViewRow row in gridNhapThoiGian.Rows)
+                    {
+                        if (row.RowType == DataControlRowType.DataRow)
+                        {
+                            TextBox start = (TextBox)row.FindControl("txtStartDate");
+                            TextBox end = (TextBox)row.FindControl("txtEndDate");
+                            TextBox ghichu = (TextBox)row.FindControl("txtGhiChu");
+                            DropDownList ddlToMay_TG = (DropDownList)row.FindControl("ddlToMayGrid");
+                            if (!string.IsNullOrEmpty(start.Text) && !string.IsNullOrEmpty(end.Text))
+                            {
+                                if (TimeSpan.Parse(start.Text) >= TimeSpan.Parse(end.Text)) continue;
+
+                                SqlParameter pr1x_tg = new SqlParameter();
+                                pr1x_tg.ParameterName = "@daNgay";
+                                pr1x_tg.Value = dte_tg.ToString("MM/dd/yyyy");
+                                SqlParameter pr2x_tg = new SqlParameter();
+                                pr2x_tg.ParameterName = "@iMaNS_ID";
+                                pr2x_tg.Value = mansid_tg;
+                                SqlParameter pr3_tg = new SqlParameter();
+                                pr3_tg.ParameterName = "@iPhongBanID";
+                                pr3_tg.Value = Convert.ToInt32(ddlToMay_TG.SelectedValue);
+                                SqlParameter pr4_tg = new SqlParameter();
+                                pr4_tg.ParameterName = "@tTuGio";
+                                pr4_tg.Value = DateTime.Parse(start.Text);
+                                SqlParameter pr5_tg = new SqlParameter();
+                                pr5_tg.ParameterName = "@tDenGio";
+                                pr5_tg.Value = DateTime.Parse(end.Text);
+                                SqlParameter pr6_tg = new SqlParameter();
+                                pr6_tg.ParameterName = "@sGhiChu";
+                                pr6_tg.Value = ghichu.Text;
+
+                                string sqlQR_ThoiGian = "[dbo].[LCB_ThoiGian_NhayKhau_Insert_Or_Update] @daNgay, @iMaNS_ID, @iPhongBanID, @tTuGio, @tDenGio, @sGhiChu";
+                                db.Database.ExecuteSqlCommand(sqlQR_ThoiGian, pr1x_tg, pr2x_tg, pr3_tg, pr4_tg, pr5_tg, pr6_tg);
+                            }
+                        }
+                    }
+
+                    lblMessenger.Text = "Lưu thời gian nhảy khâu thành công!";
                     addthismodalContact.Style["display"] = "block";
                     divThongBao.Style["display"] = "block";
-                    return;
+                    loadDataGrid();
                 }
+                catch (Exception ex) { }
             }
+        }
 
+        protected void gridNhapThoiGian_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // Populate Tổ may dropdown
+                DropDownList ddl = (DropDownList)e.Row.FindControl("ddlToMayGrid");
+                if (ddl != null)
+                {
+                    List<View_ToMay> lstToMay = getListToMay();
+                    ddl.DataSource = lstToMay;
+                    ddl.DataBind();
+
+                    string phongBanID = "";
+                    DataRowView drv = e.Row.DataItem as DataRowView;
+                    if (drv != null && drv["PhongBanID"] != null && drv["PhongBanID"] != DBNull.Value)
+                        phongBanID = drv["PhongBanID"].ToString();
+                    else
+                    {
+                        LCB_ThoiGian_NhayKhau item = e.Row.DataItem as LCB_ThoiGian_NhayKhau;
+                        if (item != null)
+                            phongBanID = item.PhongBanID.ToString();
+                    }
+
+                    if (!string.IsNullOrEmpty(phongBanID) && ddl.Items.FindByValue(phongBanID) != null)
+                        ddl.SelectedValue = phongBanID;
+                }
+
+                // Số giây: enable manual entry + add auto-calc
+                TextBox txt = (TextBox)e.Row.FindControl("txtThoiGian");
+                txt.Attributes.Add("type", "number");
+                if (!string.IsNullOrEmpty(txt.Text) && txt.Text == "0")
+                    txt.Attributes.Add("onclick", "this.value = '';");
+
+                // Auto-calc seconds when time changes
+                TextBox startDate = (TextBox)e.Row.FindControl("txtStartDate");
+                TextBox endDate = (TextBox)e.Row.FindControl("txtEndDate");
+                startDate.Attributes.Add("onchange", "tinhSoGiay(this);");
+                endDate.Attributes.Add("onchange", "tinhSoGiay(this);");
+            }
+        }
+
+        protected void gridNhapThoiGian_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
             try
             {
-                DataTable dtNhayKhau = new DataTable("dtNhayKhau");
-                dtNhayKhau.Columns.Add(new DataColumn("MaNS_ID", typeof(int)));
-                dtNhayKhau.Columns.Add(new DataColumn("PhongBanID_NS", typeof(int)));
-                dtNhayKhau.Columns.Add(new DataColumn("Ngay", typeof(DateTime)));
-                dtNhayKhau.Columns.Add(new DataColumn("ID_CongDoan", typeof(int)));
-                dtNhayKhau.Columns.Add(new DataColumn("MaHang", typeof(string)));
-                dtNhayKhau.Columns.Add(new DataColumn("PhongBanID", typeof(int)));
-                dtNhayKhau.Columns.Add(new DataColumn("NhomSize", typeof(byte)));
-                dtNhayKhau.Columns.Add(new DataColumn("ID_CachMay", typeof(byte)));
-                dtNhayKhau.Columns.Add(new DataColumn("SoLuong_NhayKhau", typeof(int)));
-                if (checkValueAm_NhayKhau() == false)
-                {
-                    lblMessenger.Text = "Số lượng thực hiện không thể nhỏ hơn 0!";
-                    addthismodalContact.Style["display"] = "block";
-                    divThongBao.Style["display"] = "block";
-                    return;
-                }
-                else if (checkLuyKeNhayKhau() == false)
-                {
-                    lblMessenger.Text = "Số thực hiện lớn hơn số cấp Bán thành phẩm lên chuyền!";
-                    addthismodalContact.Style["display"] = "block";
-                    divThongBao.Style["display"] = "block";
-                    return;
-                }
-                else if (checkValueNangSuat() == false)
-                {
-                    lblMessenger.Text = "Số lượng thực hiện không đúng, vui lòng kiểm tra lại.";
-                    addthismodalContact.Style["display"] = "block";
-                    divThongBao.Style["display"] = "block";
-                    return;
-                }
-                else
-                {
-                    int id = 0;
-                    if (gridNangSuatNhayKhau.Rows.Count > 0)
-                    {
-                        int Phongbanid_ns = 0;
-                        int mansid = 0;
-                        if (Session["PhongBanID"] != null)
-                            Phongbanid_ns = Convert.ToInt32(Session["PhongBanID"].ToString());
-                        if (Session["userid"] != null)
-                            mansid = Convert.ToInt32(Session["userid"].ToString());
-                        DateTime dte = DateTime.Parse(txtDate.Text);
 
-                        foreach (GridViewRow row in gridNangSuatNhayKhau.Rows)
+            }
+            catch
+            {
+
+            }
+        }
+
+        protected void gridNhapThoiGian_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "DeleteRow")
+            {
+                int index = Convert.ToInt32(e.CommandArgument);
+
+                DataTable dt = ViewState["gridNhapThoiGian"] as DataTable;
+
+                if (dt != null && dt.Rows.Count > index)
+                {
+                    int mansid = 0;
+                    if (Session["userid"] != null)
+                        mansid = Convert.ToInt32(Session["userid"].ToString());
+
+                    // Read PhongBanID from dropdown and TuGio from grid row
+                    GridViewRow gridRow = gridNhapThoiGian.Rows[index];
+                    DropDownList ddlToMay = (DropDownList)gridRow.FindControl("ddlToMayGrid");
+                    TextBox txtStart = (TextBox)gridRow.FindControl("txtStartDate");
+
+                    int phongBanID = 0;
+                    if (ddlToMay != null && !string.IsNullOrEmpty(ddlToMay.SelectedValue))
+                        phongBanID = int.Parse(ddlToMay.SelectedValue);
+
+                    SqlParameter pr1x = new SqlParameter();
+                    pr1x.ParameterName = "@daNgay";
+                    pr1x.Value = DateTime.Parse(txtDate.Text).Date;
+                    SqlParameter pr2x = new SqlParameter();
+                    pr2x.ParameterName = "@iMaNS_ID";
+                    pr2x.Value = mansid;
+                    SqlParameter pr3 = new SqlParameter();
+                    pr3.ParameterName = "@iPhongBanID";
+                    pr3.Value = phongBanID;
+                    SqlParameter pr4 = new SqlParameter();
+                    pr4.ParameterName = "@tTuGio";
+                    pr4.Value = DateTime.Parse(txtStart.Text);
+
+                    string sqlQR_ThoiGian = "[dbo].[LCB_ThoiGian_NhayKhau_Delte] @daNgay, @iMaNS_ID, @iPhongBanID, @tTuGio";
+                    db.Database.ExecuteSqlCommand(sqlQR_ThoiGian, pr1x, pr2x, pr3, pr4);
+
+                    dt.Rows.RemoveAt(index);
+
+                    if (dt.Rows.Count == 0)
+                    {
+                        DataRow newRow = dt.NewRow();
+                        newRow["STT"] = 1;
+                        int phongid = 0;
+                        if (Session["PhongBanID"] != null)
+                            phongid = Convert.ToInt32(Session["PhongBanID"].ToString());
+                        newRow["PhongBanID"] = phongid;
+                        newRow["TenPhongBan"] = Session["TenPhongban"] != null ? Session["TenPhongban"].ToString() : "";
+                        newRow["TuGio"] = DateTime.Now.ToString("HH:mm");
+                        dt.Rows.Add(newRow);
+                    }
+
+                    ViewState["gridNhapThoiGian"] = dt;
+
+                    gridNhapThoiGian.DataSource = dt;
+                    gridNhapThoiGian.DataBind();
+                }
+            }
+        }
+
+        protected bool checkThoiGianNhayKhau()
+        {
+            bool sus = true;
+            foreach (GridViewRow row in gridNhapThoiGian.Rows)
+            {
+                if (row.RowType == DataControlRowType.DataRow)
+                {
+                    TextBox start = (TextBox)row.FindControl("txtStartDate");
+                    TextBox end = (TextBox)row.FindControl("txtEndDate");
+
+                    if (!string.IsNullOrEmpty(start.Text) && !string.IsNullOrEmpty(end.Text))
+                    {
+                        if (TimeSpan.Parse(start.Text) >= TimeSpan.Parse(end.Text))
                         {
-                            if (row.RowType == DataControlRowType.DataRow)
-                            {
-                                string lblID_CongDoanNhayKhau = ((Label)row.Cells[0].FindControl("lblID_CongDoanNhayKhau")).Text;
-                                string lblPhongBanIDNhayKhau = ((Label)row.Cells[0].FindControl("lblPhongBanIDNhayKhau")).Text;
-                                string lblMaHangNhayKhau = ((Label)row.Cells[0].FindControl("lblMaHangNhayKhau")).Text;
-                                string lblNhomSizeNhayKhau = ((Label)row.Cells[0].FindControl("lblNhomSizeNhayKhau")).Text;
-                                string lblID_CachMayNhayKhau = ((Label)row.Cells[0].FindControl("lblID_CachMayNhayKhau")).Text;
-                                string nangsuat = ((TextBox)row.Cells[0].FindControl("txtCongNhanNhayKhau")).Text.Trim();
-                                if (!string.IsNullOrEmpty(lblID_CongDoanNhayKhau) && !string.IsNullOrEmpty(nangsuat) && !string.IsNullOrEmpty(lblPhongBanIDNhayKhau) && !string.IsNullOrEmpty(lblMaHangNhayKhau) && !string.IsNullOrEmpty(lblNhomSizeNhayKhau) && !string.IsNullOrEmpty(lblID_CachMayNhayKhau))
-                                {
-                                    string mahang = lblMaHangNhayKhau.Split('/')[1].ToString();
-                                    int idcongdoan = int.Parse(lblID_CongDoanNhayKhau);
-                                    int Phongbanid = int.Parse(lblPhongBanIDNhayKhau);
-                                    byte nhomsize = byte.Parse(lblNhomSizeNhayKhau);
-                                    byte idcanhmay = byte.Parse(lblID_CachMayNhayKhau);
-                                    int ns = int.Parse(nangsuat);
-                                    DataRow dr = dtNhayKhau.NewRow();
-                                    if (ns >= 0 && idcongdoan > 0)
-                                    {
-                                        dr["MaHang"] = mahang.Trim();
-                                        dr["PhongBanID_NS"] = Phongbanid_ns;
-                                        dr["PhongBanID"] = Phongbanid;
-                                        dr["NhomSize"] = nhomsize;
-                                        dr["ID_CachMay"] = idcanhmay;
-                                        dr["ID_CongDoan"] = idcongdoan;
-                                        dr["MaNS_ID"] = mansid;
-                                        dr["Ngay"] = dte.Date;
-                                        dr["SoLuong_NhayKhau"] = ns;
-                                        dtNhayKhau.Rows.Add(dr);
-                                    }
-                                }
-                            }
-                        }
-                        if (dtNhayKhau != null && dtNhayKhau.Rows.Count > 0)
-                        {
-                            var parameter = new SqlParameter("@dtSoLuong", SqlDbType.Structured);
-                            parameter.Value = dtNhayKhau;
-                            parameter.TypeName = "dbo.udt_web_LCB_NhayKhau_Update_SoLuong";
-                            string sqlQuery = "[dbo].[pr_Web_LCB_NhayKhau_Update_SoLuong_UDT] @dtSoLuong";
-                            id = id + db.Database.ExecuteSqlCommand(sqlQuery, parameter);
-                        }
-                        if (id != 0)
-                        {
-                            if (check_LichSuTruyCap_MaNS() == false)
-                            {
-                                LCB_WEB_LichSuCapNhat cls = new LCB_WEB_LichSuCapNhat();
-                                cls.MaNS = Session["username"].ToString();
-                                cls.NgayTruyCap = DateTime.Now;
-                                db.LCB_WEB_LichSuCapNhat.Add(cls);
-                                db.SaveChanges();
-                            }
-                            callstore();
-                            loadDataGridToMay();
-                            loadGridNhayKhau();
-                            lblMessenger.Text = "Đã cập nhật năng suất.";
-                            addthismodalContact.Style["display"] = "block";
-                            divThongBao.Style["display"] = "block";
+                            sus = false;
                         }
                     }
                 }
             }
-            catch (Exception ex) { }
+            return sus;
+        }
+
+        protected List<View_ToMay> getListToMay()
+        {
+            if (_listToMay == null)
+            {
+                try
+                {
+                    string donviid = "0";
+                    if (Session["DonViID"] != null)
+                        donviid = Session["DonViID"].ToString();
+
+                    _listToMay = db.View_ToMay
+                        .Where(x => x.DonViID == donviid)
+                        .OrderBy(x => x.TenPhongban)
+                        .ToList();
+                }
+                catch { _listToMay = new List<View_ToMay>(); }
+            }
+            return _listToMay;
         }
     }
 }

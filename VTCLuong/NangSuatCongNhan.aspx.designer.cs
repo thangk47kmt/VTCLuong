@@ -186,24 +186,6 @@ namespace TNGLuong
         protected global::System.Web.UI.HtmlControls.HtmlButton btnSreach;
 
         /// <summary>
-        /// gridNhapThoiGian control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gridNhapThoiGian;
-
-        /// <summary>
-        /// btnSaveThoiGian control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSaveThoiGian;
-
-        /// <summary>
         /// gridNangSuatNhayKhau control.
         /// </summary>
         /// <remarks>
@@ -229,6 +211,42 @@ namespace TNGLuong
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnNhapNhayKhau;
+
+        /// <summary>
+        /// lblThoiGianNK control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblThoiGianNK;
+
+        /// <summary>
+        /// btnThemThoiGian control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlButton btnThemThoiGian;
+
+        /// <summary>
+        /// btnSaveThoiGian control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSaveThoiGian;
+
+        /// <summary>
+        /// gridNhapThoiGian control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gridNhapThoiGian;
 
         /// <summary>
         /// addthismodalContact control.

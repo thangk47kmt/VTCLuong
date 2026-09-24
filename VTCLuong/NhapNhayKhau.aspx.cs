@@ -26,7 +26,6 @@ namespace TNGLuong
             db = new TNG_CTLDbContact();
             btnclose.ServerClick += new EventHandler(btnclose_Click);
             btnSreach.ServerClick += new EventHandler(btnSearch_Click);
-            btnThemThoiGian.ServerClick += new EventHandler(btnThemThoiGian_Click);
 
             //btnGetSelectData.ServerClick += new EventHandler(btnGetSelectData_Click);
             if (Session["username"] != null)
@@ -42,7 +41,6 @@ namespace TNGLuong
                     {
                         loadDataToMay();
                         loadDataMaHang();
-                        loadDataGrid();
                         DataTable dt = this.loadDataGridNhayKhau();
                         if (dt != null && dt.Rows.Count > 0)
                         {
@@ -405,7 +403,6 @@ namespace TNGLuong
         {
             loadDataToMay();
             loadDataMaHang();
-            loadDataGrid();
             DataTable dt = this.loadDataGridNhayKhau();
             if (dt != null && dt.Rows.Count > 0)
             {
@@ -496,50 +493,6 @@ namespace TNGLuong
             }
         }
 
-        protected void btnThemThoiGian_Click(object sender, EventArgs e)
-        {
-            if (ViewState["gridNhapThoiGian"] != null)
-            {
-                DataTable dtGrd = (DataTable)ViewState["gridNhapThoiGian"];
-
-                DataRow newRow = dtGrd.NewRow();
-                newRow["STT"] = dtGrd.Rows.Count + 1;
-                newRow["PhongBanID"] = int.Parse(ddlToMay.SelectedValue.ToString());
-                newRow["TenPhongBan"] = ddlToMay.SelectedItem;
-                newRow["TuGio"] = DateTime.Now.ToShortTimeString();
-
-                // Thêm dòng mới vào DataTable
-                dtGrd.Rows.Add(newRow);
-
-                // Cập nhật lại ViewState
-                ViewState["gridNhapThoiGian"] = dtGrd;
-
-                // Gán lại DataSource và bind lại dữ liệu cho GridView
-                gridNhapThoiGian.DataSource = dtGrd;
-                gridNhapThoiGian.DataBind();
-            }
-        }
-
-        protected void btnXoaThoiGian_Click(object sender, EventArgs e)
-        {
-            DataTable dt = ViewState["gridNhapThoiGian"] as DataTable;
-            DataRow newRow = dt.NewRow();
-            newRow["STT"] = dt.Rows.Count + 1;
-            newRow["PhongBanID"] = int.Parse(ddlToMay.SelectedValue.ToString()); // Tăng ID lên 1
-            newRow["TenPhongBan"] = ddlToMay.SelectedItem;   // Giá trị mẫu
-            newRow["TuGio"] = DateTime.Now.ToShortTimeString();              // Giá trị mẫu
-
-            // Thêm dòng mới vào DataTable
-            dt.Rows.Add(newRow);
-
-            // Cập nhật lại ViewState
-            ViewState["gridNhapThoiGian"] = dt;
-
-            // Gán lại DataSource và bind lại dữ liệu cho GridView
-            gridNhapThoiGian.DataSource = dt;
-            gridNhapThoiGian.DataBind();
-        }
-        
         protected void btnclose_Click(object sender, EventArgs e)
         {
             addthismodalContact.Style["display"] = "none";
@@ -600,28 +553,6 @@ namespace TNGLuong
                                 sus = false;
                                 break;
                             }
-                        }
-                    }
-                }
-            }
-            return sus;
-        }
-
-        protected bool checkThoiGianNhayKhau()
-        {
-            bool sus = true;
-            foreach (GridViewRow row in gridNhapThoiGian.Rows)
-            {
-                if (row.RowType == DataControlRowType.DataRow)
-                {
-                    TextBox start = (TextBox)row.FindControl("txtStartDate");
-                    TextBox end = (TextBox)row.FindControl("txtEndDate");
-
-                    if (!string.IsNullOrEmpty(start.Text) && !string.IsNullOrEmpty(end.Text))
-                    {
-                        if (TimeSpan.Parse(start.Text) >= TimeSpan.Parse(end.Text))
-                        {
-                            sus = false;
                         }
                     }
                 }
@@ -836,80 +767,6 @@ namespace TNGLuong
                     //else
                     //{
                     int id = 0;
-                    if(checkThoiGianNhayKhau() == false)
-                    {
-                        lblMessenger.Text = "Thời gian nhảy khâu không hợp lệ, vui lòng kiểm tra lại.";
-                        divBTN.Visible = false;
-                        addthismodalContact.Style["display"] = "block";
-
-                        return;
-                    }
-                    //Save thoi gian nhay khau
-                    if(gridNhapThoiGian.Rows.Count > 0)
-                    {
-
-                        try
-                        {
-                            int mansid = 0;
-
-                            if (Session["userid"] != null)
-                                mansid = Convert.ToInt32(Session["userid"].ToString());
-                            DateTime dte = DateTime.Parse(txtDate.Text);
-
-
-                            SqlParameter pr1 = new SqlParameter();
-                            pr1.ParameterName = "@daNgay";
-                            pr1.Value = dte.ToString("MM/dd/yyyy");
-                            SqlParameter pr2 = new SqlParameter();
-                            pr2.ParameterName = "@iMaNS_ID";
-                            pr2.Value = mansid;
-
-                            string sqlXoa_ThoiGian = "[dbo].[LCB_ThoiGian_NhayKhau_Delete_wMaNS_ID_and_Ngay] @daNgay, @iMaNS_ID";
-                            db.Database.ExecuteSqlCommand(sqlXoa_ThoiGian, pr1, pr2);
-                            //LCB_ThoiGian_NhayKhau_Delete_wMaNS_ID_and_Ngay
-                            foreach (GridViewRow row in gridNhapThoiGian.Rows)
-                            {
-                                if (row.RowType == DataControlRowType.DataRow)
-                                {
-                                    TextBox start = (TextBox)row.FindControl("txtStartDate");
-                                    TextBox end = (TextBox)row.FindControl("txtEndDate");
-                                    TextBox ghichu = (TextBox)row.FindControl("txtGhiChu");
-                                    TextBox PhongBanID = (TextBox)row.FindControl("txtPhongBanID");
-                                    if (!string.IsNullOrEmpty(start.Text) && !string.IsNullOrEmpty(end.Text))
-                                    {
-                                        if (TimeSpan.Parse(start.Text) >= TimeSpan.Parse(end.Text)) continue;
-
-                                        SqlParameter pr1x = new SqlParameter();
-                                        pr1x.ParameterName = "@daNgay";
-                                        pr1x.Value = dte.ToString("MM/dd/yyyy");
-                                        SqlParameter pr2x = new SqlParameter();
-                                        pr2x.ParameterName = "@iMaNS_ID";
-                                        pr2x.Value = mansid;
-                                        SqlParameter pr3 = new SqlParameter();
-                                        pr3.ParameterName = "@iPhongBanID";
-                                        var x = PhongBanID.Text;
-                                        pr3.Value = Convert.ToInt32(PhongBanID.Text);
-                                        SqlParameter pr4 = new SqlParameter();
-                                        pr4.ParameterName = "@tTuGio";
-                                        pr4.Value = DateTime.Parse(start.Text);
-                                        SqlParameter pr5 = new SqlParameter();
-                                        pr5.ParameterName = "@tDenGio";
-                                        pr5.Value = DateTime.Parse(end.Text);
-                                        SqlParameter pr6 = new SqlParameter();
-                                        pr6.ParameterName = "@sGhiChu";
-                                        pr6.Value = ghichu.Text;
-
-                                        string sqlQR_ThoiGian = "[dbo].[LCB_ThoiGian_NhayKhau_Insert_Or_Update] @daNgay, @iMaNS_ID, @iPhongBanID, @tTuGio, @tDenGio, @sGhiChu";
-                                        db.Database.ExecuteSqlCommand(sqlQR_ThoiGian, pr1x, pr2x, pr3, pr4, pr5, pr6);
-                                    }
-                                }
-                            }
-                        }
-                        catch (Exception ex) { }
-
-                    }
-                    //Save_ThoiGian(DateTime.Parse(txtDate.Text), Convert.ToInt32(Session["userid"].ToString()));
-
 
                     if (gridNangSuatNhayKhau.Rows.Count > 0)
                     {
@@ -1023,18 +880,6 @@ namespace TNGLuong
 
         }
 
-        protected void gridNhapThoiGian_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                TextBox txt = (TextBox)e.Row.FindControl("txtThoiGian");
-                txt.Attributes.Add("type", "number");
-                if (!string.IsNullOrEmpty(txt.Text) && txt.Text == "0")
-                    txt.Attributes.Add("onclick", "this.value = '';");
-                txt.Enabled = false;
-            }
-        }
-
         //protected void txtStartDate_TextChanged(object sender, EventArgs e)
         //{
         //    TextBox txt = sender as TextBox;
@@ -1116,142 +961,5 @@ namespace TNGLuong
         //        }
         //    }
         //}
-
-        protected void gridNhapThoiGian_RowDeleting(object sender, GridViewDeleteEventArgs e)
-        {
-            try
-            {
-
-            }
-            catch
-            {
-
-            }
-        }
-
-        protected void loadDataGrid()
-        {
-            try
-            {
-                int mansid = 0;
-                if (Session["userid"] != null)
-                    mansid = Convert.ToInt32(Session["userid"].ToString());
-
-                DateTime dte = DateTime.Parse(txtDate.Text);
-
-                SqlParameter pr1x = new SqlParameter();
-                pr1x.ParameterName = "@MaNS_ID";
-                pr1x.Value = mansid;
-                SqlParameter pr2x = new SqlParameter();
-                pr2x.ParameterName = "@Ngay";
-                pr2x.Value = dte.Date;
-
-                object[] sqlPr =
-                {
-                    new SqlParameter("@MaNS_ID", mansid),
-                    new SqlParameter("@Ngay", dte.Date),
-                };
-                string sqlQuery = "[dbo].[LCB_ThoiGian_NhayKhau_Select_DaNhap] @MaNS_ID,@Ngay";
-                List<LCB_ThoiGian_NhayKhau> lst = new List<LCB_ThoiGian_NhayKhau>();
-                // DataTable dtCheck = db.Database.SqlQuery<LCB_ThoiGian_NhayKhau>(sqlQuery, sqlPr);
-
-                lst = db.Database.SqlQuery<LCB_ThoiGian_NhayKhau>(sqlQuery, sqlPr).ToList();
-                dtTG = ultils.CreateDataTable<LCB_ThoiGian_NhayKhau>(lst);
-                decimal total = 0;
-
-
-                if (lst != null && lst.Count > 0)
-                {
-                    DataTable dtx = ultils.CreateDataTable<LCB_ThoiGian_NhayKhau>(lst);
-                    ViewState["gridNhapThoiGian"] = dtx;
-                    gridNhapThoiGian.DataSource = lst;
-                    gridNhapThoiGian.DataBind();
-
-                    gridNhapThoiGian.FooterRow.Cells[0].Text = "Tổng (giây): ";
-                    gridNhapThoiGian.FooterRow.Cells[0].Font.Bold = true;
-                    gridNhapThoiGian.FooterRow.Cells[0].ColumnSpan = 3;
-                    gridNhapThoiGian.FooterRow.Cells[1].Visible = false;
-                    gridNhapThoiGian.FooterRow.Cells[2].Visible = false;
-                    gridNhapThoiGian.FooterRow.Cells[3].Visible = false;
-                    for (int i = 0; i < lst.Count; i++)
-                    {
-                        LCB_ThoiGian_NhayKhau ls = lst[i];
-                        total += ls.ThoiGian;
-                    }
-                    gridNhapThoiGian.FooterRow.Cells[5].Text = string.Format("{0:0.#}", total);
-                    gridNhapThoiGian.FooterRow.Cells[5].Font.Bold = true;
-                    gridNhapThoiGian.FooterRow.Cells[5].Style["text-align"] = "right";
-                    gridNhapThoiGian.FooterRow.Cells[5].Style["padding-right"] = "12px";
-                    gridNhapThoiGian.FooterRow.BackColor = System.Drawing.Color.Beige;
-                }
-                else
-                {
-                    DataTable dt = ultils.CreateDataTable<LCB_ThoiGian_NhayKhau>(lst);
-                    DataRow newRow = dt.NewRow();
-                    newRow["STT"] = dt.Rows.Count + 1;
-                    newRow["PhongBanID"] = int.Parse(ddlToMay.SelectedValue.ToString()); // Tăng ID lên 1
-                    newRow["TenPhongBan"] = ddlToMay.SelectedItem;   // Giá trị mẫu
-                    newRow["TuGio"] = DateTime.Now.ToShortTimeString();              // Giá trị mẫu
-
-                    // Thêm dòng mới vào DataTable
-                    dt.Rows.Add(newRow);
-
-                    // Cập nhật lại ViewState
-                    ViewState["gridNhapThoiGian"] = dt;
-
-                    // Gán lại DataSource và bind lại dữ liệu cho GridView
-                    gridNhapThoiGian.DataSource = dt;
-                    gridNhapThoiGian.DataBind();
-                }
-            }
-            catch (Exception ex) { }
-        }
-
-        protected void gridNhapThoiGian_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "DeleteRow")
-            {
-                // Lấy index của dòng hiện tại
-                int index = Convert.ToInt32(e.CommandArgument);
-
-                // Lấy DataTable từ ViewState
-                DataTable dt = ViewState["gridNhapThoiGian"] as DataTable;
-
-                if (dt != null && dt.Rows.Count > index)
-                {
-                    var dr = dt.Rows[index];
-                    int mansid = 0;
-                    if (Session["userid"] != null)
-                        mansid = Convert.ToInt32(Session["userid"].ToString());
-
-                    SqlParameter pr1x = new SqlParameter();
-                    pr1x.ParameterName = "@daNgay";
-                    pr1x.Value = DateTime.Parse(txtDate.Text).Date;
-                    SqlParameter pr2x = new SqlParameter();
-                    pr2x.ParameterName = "@iMaNS_ID";
-                    pr2x.Value = mansid;
-                    SqlParameter pr3 = new SqlParameter();
-                    pr3.ParameterName = "@iPhongBanID";
-                    pr3.Value = int.Parse(dr["PhongBanID"].ToString());
-                    SqlParameter pr4 = new SqlParameter();
-                    pr4.ParameterName = "@tTuGio";
-                    pr4.Value = DateTime.Parse(dr["TuGio"].ToString());
-
-                    string sqlQR_ThoiGian = "[dbo].[LCB_ThoiGian_NhayKhau_Delte] @daNgay, @iMaNS_ID, @iPhongBanID, @tTuGio";
-                    db.Database.ExecuteSqlCommand(sqlQR_ThoiGian, pr1x, pr2x, pr3, pr4);
-
-
-                    // Xóa dòng khỏi DataTable
-                    dt.Rows.RemoveAt(index);
-
-                    // Cập nhật lại ViewState
-                    ViewState["gridNhapThoiGian"] = dt;
-
-                    // Gán lại DataSource và bind lại dữ liệu cho GridView
-                    gridNhapThoiGian.DataSource = dt;
-                    gridNhapThoiGian.DataBind();
-                }
-            }
-        }
     }
 }

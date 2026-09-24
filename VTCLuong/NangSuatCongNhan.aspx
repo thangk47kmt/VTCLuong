@@ -213,70 +213,7 @@
                     <%--<asp:TextBox ID="txtTimKiem" CssClass="textbox" runat="server" Width="100%" AutoPostBack="True"></asp:TextBox>--%>
                 </td>
             </tr>
-            <tr>
-                <td colspan="2" style="width: 100%;">
-                    <asp:GridView ID="gridNhapThoiGian" runat="server" AutoGenerateColumns="False" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="3" ShowFooter="True" Width="100%">
-                        <Columns>
-                            <asp:BoundField DataField="STT" HeaderText="STT">
-                                <HeaderStyle HorizontalAlign="Center" Width="10%" />
-                                <ItemStyle HorizontalAlign="Center" Width="10%" />
-                            </asp:BoundField>
-                            <asp:BoundField DataField="PhongBanID" HeaderText="PhongBanID" Visible="false">
-                                <HeaderStyle HorizontalAlign="Center" Width="100px" />
-                                <ItemStyle HorizontalAlign="Center" Width="100px" />
-                            </asp:BoundField>
-                            <asp:BoundField DataField="TenPhongBan" HeaderText="Tổ may">
-                                <HeaderStyle HorizontalAlign="Center" Width="20%" />
-                                <ItemStyle HorizontalAlign="Center" Width="20%" />
-                            </asp:BoundField>
-                            <asp:TemplateField HeaderText="Bắt đầu">
-                                <HeaderStyle HorizontalAlign="Center" Width="15%" />
-                                <ItemStyle HorizontalAlign="Right" Width="15%" />
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtStartDate" runat="server" Text='<%#Eval("TuGio","{0:HH:mm}") %>' Width="100%" Style="text-align: center;" TextMode="Time" ReadOnly="true"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Kết thúc">
-                                <HeaderStyle HorizontalAlign="Center" Width="15%" />
-                                <ItemStyle HorizontalAlign="Right" Width="15%" />
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtEndDate" runat="server" Text='<%#Eval("DenGio","{0:HH:mm}") %>' Width="100%" Style="text-align: center;" TextMode="Time" ReadOnly="true"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Số giây">
-                                <HeaderStyle HorizontalAlign="Center" Width="10%" />
-                                <ItemStyle HorizontalAlign="Right" Width="10%" />
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtThoiGian" runat="server" Text='<%#Eval("ThoiGian") %>' Width="100%" Style="text-align: right;" ReadOnly="true"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Ghi chú">
-                                <HeaderStyle HorizontalAlign="Center" Width="25%" />
-                                <ItemStyle HorizontalAlign="Right" Width="25%" />
-                                <ItemTemplate>
-                                    <asp:TextBox ID="txtGhiChu" runat="server" Text='<%#Eval("GhiChu") %>' Width="100%" ReadOnly="true"></asp:TextBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
 
-                        </Columns>
-                        <FooterStyle BackColor="White" ForeColor="#000066" />
-                        <HeaderStyle BackColor="#006699" Font-Bold="True" ForeColor="White" />
-                        <PagerStyle BackColor="White" ForeColor="#000066" HorizontalAlign="Left" />
-                        <RowStyle ForeColor="#000066" />
-                        <SelectedRowStyle BackColor="#669999" Font-Bold="True" ForeColor="White" />
-                        <SortedAscendingCellStyle BackColor="#F1F1F1" />
-                        <SortedAscendingHeaderStyle BackColor="#007DBB" />
-                        <SortedDescendingCellStyle BackColor="#CAC9C9" />
-                        <SortedDescendingHeaderStyle BackColor="#00547E" />
-                    </asp:GridView>
-                </td>
-                
-            </tr>
-            <tr>
-            <td style="width: 45%" align="right">
-                <asp:Button ID="btnSaveThoiGian" runat="server" Text="Lưu" CssClass="btnSaveThoiGian" OnClick="btnSaveThoiGian_Click" />
-            </td>
-        </tr>
             <tr>
                 <td colspan="2">
 
@@ -427,14 +364,112 @@
             </tr>
         </table>
     </div>
-    <div style="width: 100%; font-family: Tahoma; font-size: 12px; margin-top: 15px;">
-        <%--<div style="margin-top: 10px;width:100%;font-size: 10pt;font-weight: bold;color: red;">
-            <asp:Label ID="Label4" runat="server" Text="Lý do chưa duyệt:" CssClass="margin-top"></asp:Label>
-        </div>
-        <div style="width:100%;font-size: 9pt;color: red;padding:1px 15px">
-            <asp:Label ID="lblLyDo" runat="server" Text="Tổ trưởng chưa phê duyệt." Width="100%"></asp:Label>
-        </div>--%>
+    <div style="width: 100%; font-family: Tahoma; margin-top: 15px;" class="fontsize">
+        <table style="width: 100%;">
+            <tr>
+                <td colspan="2" style="width: 100%;">
+                    <div style="margin-top: 10px; float: left; font-size: 9pt; font-weight: bold; color: red;">
+                        <asp:Label ID="lblThoiGianNK" runat="server" Text="IV. Thời gian nhảy khâu" CssClass="margin-top"></asp:Label>
+                    </div>
+                    <div class="topnav">
+                        <div class="search-container">
+                            <button type="submit" id="btnThemThoiGian" runat="server" style="float: right; margin-right: 5px;">Thêm thời gian</button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <asp:GridView ID="gridNhapThoiGian" runat="server" AutoGenerateColumns="False" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="3" ShowFooter="True" Width="100%" OnRowDataBound="gridNhapThoiGian_RowDataBound" OnRowCommand="gridNhapThoiGian_RowCommand" OnRowDeleting="gridNhapThoiGian_RowDeleting">
+                        <Columns>
+                            <asp:BoundField DataField="STT" HeaderText="STT">
+                                <HeaderStyle HorizontalAlign="Center" Width="10%" />
+                                <ItemStyle HorizontalAlign="Center" Width="10%" />
+                            </asp:BoundField>
+                            <asp:TemplateField HeaderText="Tổ may">
+                                <HeaderStyle HorizontalAlign="Center" Width="25%" />
+                                <ItemStyle HorizontalAlign="Left" Width="25%" />
+                                <ItemTemplate>
+                                    <asp:DropDownList ID="ddlToMayGrid" runat="server" DataTextField="TenPhongban" DataValueField="PhongBanID" Width="100%"></asp:DropDownList>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Bắt đầu">
+                                <HeaderStyle HorizontalAlign="Center" Width="12%" />
+                                <ItemStyle HorizontalAlign="Center" Width="12%" />
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtStartDate" runat="server" Text='<%#Eval("TuGio","{0:HH:mm}") %>' Width="90%" Style="text-align: center;" TextMode="Time"></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Kết thúc">
+                                <HeaderStyle HorizontalAlign="Center" Width="12%" />
+                                <ItemStyle HorizontalAlign="Center" Width="12%" />
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtEndDate" runat="server" Text='<%#Eval("DenGio","{0:HH:mm}") %>' Width="90%" Style="text-align: center;" TextMode="Time"></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Số giây">
+                                <HeaderStyle HorizontalAlign="Center" Width="10%" />
+                                <ItemStyle HorizontalAlign="Right" Width="10%" />
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtThoiGian" runat="server" Text='<%#Eval("ThoiGian") %>' Width="100%" Style="text-align: right;"></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Ghi chú">
+                                <HeaderStyle HorizontalAlign="Center" Width="25%" />
+                                <ItemStyle HorizontalAlign="Right" Width="25%" />
+                                <ItemTemplate>
+                                    <asp:TextBox ID="txtGhiChu" runat="server" Text='<%#Eval("GhiChu") %>' Width="100%"></asp:TextBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Xóa">
+                                <HeaderStyle HorizontalAlign="Center" Width="60px" />
+                                <ItemStyle HorizontalAlign="Center" Width="60px" />
+                                <ItemTemplate>
+                                    <asp:Button ID="btnXoaDong" runat="server" Text="Xóa" CommandName="DeleteRow" CommandArgument='<%# Container.DataItemIndex %>' Width="55px" OnClientClick="return confirm('Bạn có chắc chắn muốn xóa dòng này?');" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        <FooterStyle BackColor="White" ForeColor="#000066" />
+                        <HeaderStyle BackColor="#006699" Font-Bold="True" ForeColor="White" />
+                        <PagerStyle BackColor="White" ForeColor="#000066" HorizontalAlign="Left" />
+                        <RowStyle ForeColor="#000066" />
+                        <SelectedRowStyle BackColor="#669999" Font-Bold="True" ForeColor="White" />
+                        <SortedAscendingCellStyle BackColor="#F1F1F1" />
+                        <SortedAscendingHeaderStyle BackColor="#007DBB" />
+                        <SortedDescendingCellStyle BackColor="#CAC9C9" />
+                        <SortedDescendingHeaderStyle BackColor="#00547E" />
+                    </asp:GridView>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center; padding-top: 5px;">
+                    <asp:Button ID="btnSaveThoiGian" runat="server" Text="Lưu thời gian" CssClass="btnSave" OnClick="btnSaveThoiGian_Click" />
+                </td>
+            </tr>
+        </table>
     </div>
+    <script type="text/javascript">
+        function tinhSoGiay(el) {
+            var row = el.closest('tr');
+            if (!row) return;
+            var timeInputs = row.querySelectorAll('input[type="time"]');
+            if (timeInputs.length >= 2) {
+                var start = timeInputs[0].value;
+                var end = timeInputs[1].value;
+                if (start && end) {
+                    var sp = start.split(':');
+                    var ep = end.split(':');
+                    var startSec = parseInt(sp[0]) * 3600 + parseInt(sp[1]) * 60;
+                    var endSec = parseInt(ep[0]) * 3600 + parseInt(ep[1]) * 60;
+                    var diff = endSec - startSec;
+                    var numInput = row.querySelector('input[type="number"]');
+                    if (numInput) {
+                        numInput.value = diff > 0 ? diff : 0;
+                    }
+                }
+            }
+        }
+    </script>
     <div class="modal fade modal-addThis modal-contactform in" id="addthismodalContact" runat="server" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
         <div id="divThongBao" runat="server" class="modal-dialog modal-dialog-centered" style="display: none;">
             <div class="modal-content">
